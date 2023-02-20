@@ -55,12 +55,12 @@ function init() {
 
   // Starting positions of the opponents
   // 4 different arrays that have different opponent images
-  let gkOpponent = 3
+  let opponentsGK = [2, 3, 4]
   let opponentsDef = [10, 11, 12, 13, 14, 15, 16]
   let opponentsMid = [20, 21, 22, 23, 24, 25, 26]
   let opponentsAtt = [31, 32, 33, 34, 35]
-  // // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid
-  // let totalOpponentArray = gkOpponent.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+  // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid
+  let totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
 
   // * Keyboard(keyCode) variables
   const right = 39
@@ -85,9 +85,6 @@ function init() {
 
   // Timer for the opponent's movement intervals
   let opponentMovements
-
-  // Shot movement interval timer
-  let shotMovement
 
   // Won boolean
   let won = true
@@ -186,7 +183,7 @@ function init() {
       saintsChant.play()
       saintsChant.volume = 0.1
       saintsChant.loop = true
-      // Add opponents
+      // Add opponents the total array of opponents
       addOpponent()
       // Move the opponents ('end game if the player dies' is within the moveOpponents function)
       moveOpponents()
@@ -315,38 +312,38 @@ function init() {
   function addOpponent() {
     // Add three different types of opponent images in three different levels
     if (level === 1) {
-      cells[gkOpponent].classList.add('banzunuOpponent', 'opponent')
-      opponentsDef.forEach(opponents => cells[opponents].classList.add('bednarekOpponent', 'opponent'))
-      opponentsMid.forEach(opponents => cells[opponents].classList.add('jwpOpponent', 'opponent'))
-      opponentsAtt.forEach(opponents => cells[opponents].classList.add('cheOpponent', 'opponent'))
+      opponentsGK.forEach(opponents => cells[opponents].classList.add('banzunuOpponent'))
+      opponentsDef.forEach(opponents => cells[opponents].classList.add('bednarekOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.add('jwpOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.add('cheOpponent'))
     } else if (level === 2) {
-      cells[gkOpponent].classList.add('popeOpponent', 'opponent')
-      opponentsDef.forEach(opponents => cells[opponents].classList.add('trippierOpponent', 'opponent'))
-      opponentsMid.forEach(opponents => cells[opponents].classList.add('brunoOpponent', 'opponent'))
-      opponentsAtt.forEach(opponents => cells[opponents].classList.add('wilsonOpponent', 'opponent'))
+      opponentsGK.forEach(opponents => cells[opponents].classList.add('popeOpponent'))
+      opponentsDef.forEach(opponents => cells[opponents].classList.add('trippierOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.add('brunoOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.add('wilsonOpponent'))
     } else if (level === 3) {
-      cells[gkOpponent].classList.add('kepaOpponent', 'opponent')
-      opponentsDef.forEach(opponents => cells[opponents].classList.add('jamesOpponent', 'opponent'))
-      opponentsMid.forEach(opponents => cells[opponents].classList.add('mountOpponent', 'opponent'))
-      opponentsAtt.forEach(opponents => cells[opponents].classList.add('kaiOpponent', 'opponent'))
+      opponentsGK.forEach(opponents => cells[opponents].classList.add('kepaOpponent'))
+      opponentsDef.forEach(opponents => cells[opponents].classList.add('jamesOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.add('mountOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.add('kaiOpponent'))
     }
   }
 
   // Remove opponent function
   function removeOpponent() {
-    // Remove three different types of opponent images in three different levels
+    // Remove four different types of opponent images in three different levels
     if (level === 1) {
-      cells[gkOpponent].classList.remove('banzunuOpponent', 'opponent')
+      opponentsGK.forEach(opponents => cells[opponents].classList.remove('banzunuOpponent'))
       opponentsDef.forEach(opponents => cells[opponents].classList.remove('bednarekOpponent'))
       opponentsMid.forEach(opponents => cells[opponents].classList.remove('jwpOpponent'))
       opponentsAtt.forEach(opponents => cells[opponents].classList.remove('cheOpponent'))
     } else if (level === 2) {
-      cells[gkOpponent].classList.remove('popeOpponent', 'opponent')
+      opponentsGK.forEach(opponents => cells[opponents].classList.remove('popeOpponent'))
       opponentsDef.forEach(opponents => cells[opponents].classList.remove('trippierOpponent'))
       opponentsMid.forEach(opponents => cells[opponents].classList.remove('brunoOpponent'))
       opponentsAtt.forEach(opponents => cells[opponents].classList.remove('wilsonOpponent'))
     } else if (level === 3) {
-      cells[gkOpponent].classList.remove('kepaOpponent', 'opponent')
+      opponentsGK.forEach(opponents => cells[opponents].classList.remove('kepaOpponent'))
       opponentsDef.forEach(opponents => cells[opponents].classList.remove('jamesOpponent'))
       opponentsMid.forEach(opponents => cells[opponents].classList.remove('mountOpponent'))
       opponentsAtt.forEach(opponents => cells[opponents].classList.remove('kaiOpponent'))
@@ -365,44 +362,43 @@ function init() {
       // If all of the cells are valid, move all of the cells to right then left and repeat. When not valid, move down. Switch to the left. (For loop)
       removeOpponent()
       if (opponentMoved < movementLength && movesRight) {
-        gkOpponent = gkOpponent + 1
+        opponentsGK = opponentsGK.map(opponent => opponent + 1)
         opponentsDef = opponentsDef.map(opponent => opponent + 1)
         opponentsMid = opponentsMid.map(opponent => opponent + 1)
         opponentsAtt = opponentsAtt.map(opponent => opponent + 1)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + 1)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent + 1)
         opponentMoved += 1
       } else if (opponentMoved === movementLength && movesRight) {
-        gkOpponent = gkOpponent + width
+        opponentsGK = opponentsGK.map(opponent => opponent + width)
         opponentsDef = opponentsDef.map(opponent => opponent + width)
         opponentsMid = opponentsMid.map(opponent => opponent + width)
         opponentsAtt = opponentsAtt.map(opponent => opponent + width)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
         opponentMoved = 0
         movesRight = false
         movesLeft = true
       } else if (opponentMoved < movementLength && movesLeft) {
-        gkOpponent = gkOpponent - 1
+        opponentsGK = opponentsGK.map(opponent => opponent - 1)
         opponentsDef = opponentsDef.map(opponent => opponent - 1)
         opponentsMid = opponentsMid.map(opponent => opponent - 1)
         opponentsAtt = opponentsAtt.map(opponent => opponent - 1)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent - 1)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent - 1)
         opponentMoved += 1
       } else if (opponentMoved === movementLength && movesLeft) {
-        gkOpponent = gkOpponent + width
+        opponentsGK = opponentsGK.map(opponent => opponent + width)
         opponentsDef = opponentsDef.map(opponent => opponent + width)
         opponentsMid = opponentsMid.map(opponent => opponent + width)
         opponentsAtt = opponentsAtt.map(opponent => opponent + width)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
         opponentMoved = 0
         movesRight = true
         movesLeft = false
         // Added the game over function here because this conditional is point that the opponents reaches the bottom of the grid
-        if (opponentsAtt.includes(cellCount - width + 3)) {
+        if (totalOpponentArray.some(opponent => opponent >= cellCount - width)) {
           won = false
           endGame()
         }
       }
-
       addOpponent()    
     
       // // Have a random the opponent shoot footballs every interval
@@ -435,88 +431,129 @@ function init() {
 
   // My player shoots the ball function
   function myShot(e) {
-    if (e.keyCode === space ) {
+    if (e.keyCode === space) {
       e.preventDefault()
       // Ball position at start (right above cell of the player image)
       let shotIndex = currentPosition - width 
       addFootball(shotIndex)
-      shotMovement = setInterval(() => {
+      // Rather than declaring a global variable, the interval variable is declared here.
+      const shotMovement = setInterval(() => {
         // When the opponent grid cell is equal to the cell of the football I shot, remove the opponent player, the football, the shotIndex value within the four opponents array and add 10 points to the score
-        if (cells[shotIndex].classList.contains('opponent') && shotIndex >= 0) {
-          if (gkOpponent === shotIndex) {
-            if (level === 1) {
-              cells[shotIndex].classList.remove('opponent', 'banzunuOpponent', 'football')
-              gkOpponent = null
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 2) {
-              cells[shotIndex].classList.remove('popeOpponent', 'football')
-              gkOpponent = null
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 3) {
-              cells[shotIndex].classList.remove('kepaOpponent', 'football')
-              gkOpponent = null
-              // totalOpponentArray.splice(opponentIndex, 1)
-            }
-          } else if (opponentsDef.includes(shotIndex)) {
-            if (level === 1) {
-              cells[shotIndex].classList.remove('opponent', 'bednarekOpponent', 'football')
-              const opponentIndex = opponentsDef.indexOf(shotIndex)
-              opponentsDef.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 2) {
-              cells[shotIndex].classList.add('trippierOpponent', 'football')
-              const opponentIndex = opponentsDef.indexOf(shotIndex)
-              opponentsDef.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 3) {
-              cells[shotIndex].classList.remove('jamesOpponent', 'football')
-              const opponentIndex = opponentsDef.indexOf(shotIndex)
-              opponentsDef.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            }
-          } else if (opponentsMid.includes(shotIndex)) {
-            if (level === 1) {
-              cells[shotIndex].classList.remove('opponent', 'jwpOpponent', 'football')
-              const opponentIndex = opponentsMid.indexOf(shotIndex)
-              opponentsMid.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 2) {
-              cells[shotIndex].classList.remove('brunoOpponent', 'football')
-              const opponentIndex = opponentsMid.indexOf(shotIndex)
-              opponentsMid.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 3) {
-              cells[shotIndex].classList.remove('mountOpponent', 'football')
-              const opponentIndex = opponentsMid.indexOf(shotIndex)
-              opponentsMid.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            }
-          } else if (opponentsAtt.includes(shotIndex)) {
-            if (level === 1) {
-              cells[shotIndex].classList.remove('opponent', 'cheOpponent', 'football')
-              const opponentIndex = opponentsAtt.indexOf(shotIndex)
-              opponentsAtt.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 2) {
-              cells[shotIndex].classList.remove('wilsonOpponent', 'football')
-              const opponentIndex = opponentsAtt.indexOf(shotIndex)
-              opponentsAtt.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            } else if (level === 3) {
-              cells[shotIndex].classList.remove('kaiOpponent', 'football')
-              const opponentIndex = opponentsAtt.indexOf(shotIndex)
-              opponentsAtt.splice(opponentIndex, 1)
-              // totalOpponentArray.splice(opponentIndex, 1)
-            }
-          }
+        if (shotIndex < width) {
+          removeFootball(shotIndex)
+        } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
+          cells[shotIndex].classList.remove('banzunuOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          const opponentIndex = opponentsGK.indexOf(shotIndex)
+          opponentsGK.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
           score += 10
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
-        } else if (shotIndex >= 0) {
-          // Flying shots
+        } else if (cells[shotIndex].classList.contains('popeOpponent')) {
+          cells[shotIndex].classList.remove('popeOpponent', 'football')
+          const opponentIndex = opponentsGK.indexOf(shotIndex)
+          opponentsGK.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
+          cells[shotIndex].classList.remove('kepaOpponent', 'football')
+          const opponentIndex = opponentsGK.indexOf(shotIndex)
+          opponentsGK.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
+          cells[shotIndex].classList.remove('bednarekOpponent', 'football')
+          const opponentIndex = opponentsDef.indexOf(shotIndex)
+          opponentsDef.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
+          cells[shotIndex].classList.add('trippierOpponent', 'football')
+          const opponentIndex = opponentsDef.indexOf(shotIndex)
+          opponentsDef.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
+          cells[shotIndex].classList.add('jamesOpponent', 'football')
+          const opponentIndex = opponentsDef.indexOf(shotIndex)
+          opponentsDef.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
+          cells[shotIndex].classList.remove('jwpOpponent', 'football')
+          const opponentIndex = opponentsMid.indexOf(shotIndex)
+          opponentsMid.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
+          cells[shotIndex].classList.remove('brunoOpponent', 'football')
+          const opponentIndex = opponentsMid.indexOf(shotIndex)
+          opponentsMid.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('mountOpponent')) {
+          cells[shotIndex].classList.remove('mountOpponent', 'football')
+          const opponentIndex = opponentsMid.indexOf(shotIndex)
+          opponentsMid.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('cheOpponent')) {
+          cells[shotIndex].classList.remove('cheOpponent', 'football')
+          const opponentIndex = opponentsAtt.indexOf(shotIndex)
+          opponentsAtt.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
+          cells[shotIndex].classList.remove('wilsonOpponent', 'football')
+          const opponentIndex = opponentsAtt.indexOf(shotIndex)
+          opponentsAtt.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
+          cells[shotIndex].classList.remove('kaiOpponent', 'football')
+          const opponentIndex = opponentsAtt.indexOf(shotIndex)
+          opponentsAtt.splice(opponentIndex, 1)
+          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+          totalOpponentArray.splice(totalOpponentIndex, 1)
+          score += 10
+          scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else {
           removeFootball(shotIndex)
           shotIndex -= width
-          addFootball(shotIndex)
+          addFootball(shotIndex)  
         }
       }, 300)
     }
