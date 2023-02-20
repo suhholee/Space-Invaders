@@ -335,6 +335,9 @@ h3 {
   background-size: 30px;
 }
 
+.opponent {
+}
+
 .banzunuOpponent {
   background-image: url('../assets/banzunu.png');
   background-repeat: no-repeat;
@@ -408,7 +411,7 @@ h3 {
 }
 
 .red-card {
-  background-image: url('../assets/red-card.jpeg');
+  background-image: url('../assets/red-card.png');
   background-repeat: no-repeat;
   background-size: contain;
 }
