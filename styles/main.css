@@ -328,6 +328,11 @@ h3 {
   background-size: contain;
 }
 
+.opponent {
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 .football {
   background-image: url('../assets/football.png');
   background-repeat: no-repeat;
@@ -335,79 +340,52 @@ h3 {
   background-size: 30px;
 }
 
-.opponent {
-}
-
 .banzunuOpponent {
   background-image: url('../assets/banzunu.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .bednarekOpponent {
   background-image: url('../assets/bednarek.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .jwpOpponent {
   background-image: url('../assets/jwp.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .cheOpponent {
   background-image: url('../assets/che.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .trippierOpponent {
   background-image: url('../assets/trippier.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .brunoOpponent {
   background-image: url('../assets/bruno-g.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .wilsonOpponent {
   background-image: url('../assets/wilson.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .popeOpponent {
   background-image: url('../assets/pope.avif');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .kepaOpponent {
   background-image: url('../assets/kepa.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .jamesOpponent {
   background-image: url('../assets/james.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .mountOpponent {
   background-image: url('../assets/mount.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .kaiOpponent {
   background-image: url('../assets/kai.png');
-  background-repeat: no-repeat;
-  background-size: contain;
 }
 
 .red-card {
