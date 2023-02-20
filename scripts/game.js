@@ -58,8 +58,8 @@ function init() {
   let opponentsDef = [10, 11, 12, 13, 14, 15, 16]
   let opponentsMid = [20, 21, 22, 23, 24, 25, 26]
   let opponentsAtt = [31, 32, 33, 34, 35]
-  // // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid
-  // let totalOpponentArray = gkOpponent.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+  // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid
+  let totalOpponentArray = gkOpponent.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
 
   // * Keyboard(keyCode) variables
   const right = 39
@@ -369,14 +369,14 @@ function init() {
         opponentsDef = opponentsDef.map(opponent => opponent + 1)
         opponentsMid = opponentsMid.map(opponent => opponent + 1)
         opponentsAtt = opponentsAtt.map(opponent => opponent + 1)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + 1)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent + 1)
         opponentMoved += 1
       } else if (opponentMoved === 3 && movesRight) {
         gkOpponent = gkOpponent.map(opponent => opponent + width)
         opponentsDef = opponentsDef.map(opponent => opponent + width)
         opponentsMid = opponentsMid.map(opponent => opponent + width)
         opponentsAtt = opponentsAtt.map(opponent => opponent + width)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
         opponentMoved = 0
         movesRight = false
         movesLeft = true
@@ -385,23 +385,22 @@ function init() {
         opponentsDef = opponentsDef.map(opponent => opponent - 1)
         opponentsMid = opponentsMid.map(opponent => opponent - 1)
         opponentsAtt = opponentsAtt.map(opponent => opponent - 1)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent - 1)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent - 1)
         opponentMoved += 1
       } else if (opponentMoved === 3 && movesLeft) {
         gkOpponent = gkOpponent.map(opponent => opponent + width)
         opponentsDef = opponentsDef.map(opponent => opponent + width)
         opponentsMid = opponentsMid.map(opponent => opponent + width)
         opponentsAtt = opponentsAtt.map(opponent => opponent + width)
-        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
+        totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
         opponentMoved = 0
         movesRight = true
         movesLeft = false
-      } 
-      // else if (totalOpponentArray.some(opponent => opponent >= 90)) {
-      //   won = false
-      //   clearInterval()
-      //   endGame()
-      // }
+      } else if (totalOpponentArray.some(opponent => opponent >= 90)) {
+        won = false
+        clearInterval()
+        endGame()
+      }
       addOpponent()    
     
       // // Have a random the opponent shoot footballs every interval
