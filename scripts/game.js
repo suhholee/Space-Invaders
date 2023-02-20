@@ -54,6 +54,7 @@ function init() {
   const cells = []
 
   // Starting positions of the opponents
+  // 4 different arrays that have different opponent images
   let gkOpponent = [3]
   let opponentsDef = [10, 11, 12, 13, 14, 15, 16]
   let opponentsMid = [20, 21, 22, 23, 24, 25, 26]
@@ -76,20 +77,17 @@ function init() {
   // Current level
   const level = 1
 
-  // // Number of opponents
-  // let opponentNum = 25
-
   // Opponent movement interval
   const interval = 1000
 
   // // Decrease time (used when levels up)
   // const decreaseTime = 200
 
-  // Timer for the intervals
-  let timer
+  // Timer for the opponent's movement intervals
+  let opponentMovements
 
-  // Shot timer
-  let shotTimer
+  // Shot movement interval timer
+  let shotMovement
 
   // Won boolean
   let won = true
@@ -238,6 +236,7 @@ function init() {
   function endGame() {
     // If the game was ended by losing, boolean won is false and unhide the lost game class element
     // If the game was won at the end, boolean won is true unhide the won game class element
+    clearInterval(opponentMovements)
     console.log('End Game')
   }
 
@@ -361,17 +360,18 @@ function init() {
     let opponentMoved = 0
     let movesRight = true
     let movesLeft = false
-    timer = setInterval(() => {
+    const movementLength = width - opponentsDef.length
+    opponentMovements = setInterval(() => {
       // If all of the cells are valid, move all of the cells to right then left and repeat. When not valid, move down. Switch to the left. (For loop)
       removeOpponent()
-      if (opponentMoved < 3 && movesRight) {
+      if (opponentMoved < movementLength && movesRight) {
         gkOpponent = gkOpponent.map(opponent => opponent + 1)
         opponentsDef = opponentsDef.map(opponent => opponent + 1)
         opponentsMid = opponentsMid.map(opponent => opponent + 1)
         opponentsAtt = opponentsAtt.map(opponent => opponent + 1)
         totalOpponentArray = totalOpponentArray.map(opponent => opponent + 1)
         opponentMoved += 1
-      } else if (opponentMoved === 3 && movesRight) {
+      } else if (opponentMoved === movementLength && movesRight) {
         gkOpponent = gkOpponent.map(opponent => opponent + width)
         opponentsDef = opponentsDef.map(opponent => opponent + width)
         opponentsMid = opponentsMid.map(opponent => opponent + width)
@@ -380,14 +380,14 @@ function init() {
         opponentMoved = 0
         movesRight = false
         movesLeft = true
-      } else if (opponentMoved < 3 && movesLeft) {
+      } else if (opponentMoved < movementLength && movesLeft) {
         gkOpponent = gkOpponent.map(opponent => opponent - 1)
         opponentsDef = opponentsDef.map(opponent => opponent - 1)
         opponentsMid = opponentsMid.map(opponent => opponent - 1)
         opponentsAtt = opponentsAtt.map(opponent => opponent - 1)
         totalOpponentArray = totalOpponentArray.map(opponent => opponent - 1)
         opponentMoved += 1
-      } else if (opponentMoved === 3 && movesLeft) {
+      } else if (opponentMoved === movementLength && movesLeft) {
         gkOpponent = gkOpponent.map(opponent => opponent + width)
         opponentsDef = opponentsDef.map(opponent => opponent + width)
         opponentsMid = opponentsMid.map(opponent => opponent + width)
@@ -396,11 +396,14 @@ function init() {
         opponentMoved = 0
         movesRight = true
         movesLeft = false
-      } else if (totalOpponentArray.some(opponent => opponent >= 90)) {
-        won = false
-        clearInterval()
-        endGame()
+        // Added the game over function here because this conditional is point that the opponents reaches the bottom of the grid
+        if (totalOpponentArray.includes(cellCount - width + 3)) {
+          console.log(opponentsAtt)
+          won = false
+          endGame()
+        }
       }
+
       addOpponent()    
     
       // // Have a random the opponent shoot footballs every interval
@@ -438,15 +441,13 @@ function init() {
       // Ball position at start (right above cell of the player image)
       let shotIndex = currentPosition - width
       addFootball(shotIndex)
-      shotTimer = setInterval(() => {
+      shotMovement = setInterval(() => {
         // Flying shots
         removeFootball(shotIndex)
         shotIndex -= 10 
         addFootball(shotIndex)
       }, 300)
-
     }
-    // When the opponent grid cell is equal to the cell of the football I shot, remove the opponent player and add 10 points to the score
     // When the footblal grid cell is equal to the football that the opponent shot, remove both footballs
   }
 

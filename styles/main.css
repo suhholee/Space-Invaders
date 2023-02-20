@@ -407,6 +407,12 @@ h3 {
   background-size: contain;
 }
 
+.red-card {
+  background-image: url('../assets/red-card.jpeg');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 /* Enter level two */
 #newcastle {
   color: rgba(241, 190, 72, 1)
