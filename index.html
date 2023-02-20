@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>PITCH INVADERS!</title>
+    <link rel="stylesheet" href="styles/main.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=League+Spartan&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="./assets/logo.png">
+    <script src="scripts/game.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <h1><img src="./assets/logo.png">THE PITCH INVADERS</h1>
+
+    <div class="start-page">
+      <img class="trophy" src="./assets/trophy.png">
+      <h2>CLICK THE PREMIER LEAGUE TROPHY TO START THE GAME</h2>
+    </div>
+
+    <div class="container hidden">
+      <div class="left-container">
+        <button id="restart">RESTART</button>
+    
+        <div class="status-container">
+          <div class="scores-container">
+            <div class="score">SCORE:&nbsp;<span id="current-score">00</span></div>
+            <div class="score">HIGH SCORE:&nbsp;<span id="high-score">00</span></div>
+          </div>
+          <div class="lives">
+            LIVES:&nbsp;<span id="hearts">❤️❤️❤️</span>
+          </div>
+          <div class="level">
+            LEVEL:&nbsp;<span id="current-level">1</span>
+          </div>
+        </div>
+  
+        <div class="how-to-play">
+          <span>HOW TO PLAY</span>
+          <ul>
+            <li>Choose a STAR Premier League player to start the game.</li>
+            <li>Win THREE AWAY GAMES for the Premier League title!</li>
+            <li>Move your player left ← or right →, and shoot using the space bar.</li>
+            <li>An opposing Premier League team will try to shoot the ball to hit you.</li>
+            <li>When you get hit by their ball, you will lose a life. You have 3 lives.</li>
+            <li>Your mission is to defeat all the opponents by hitting them with the football.</li>
+            <li>Your 3 lives will not be renewed each level.</li>
+            <li>Press the arrow button on the bottom right to progress to the next round.</li>
+            <li>Win the Premier League title by defeating all three opponents!</li>
+          </ul>
+        </div>
+  
+      </div>
+  
+      <div class="grid-wrapper">
+        <div class="select-player">
+          <h3>CHOOSE A PREMIER LEAGUE PLAYER</h3>
+          <div class="four-player-container">
+            <div class="player-container rashford">
+              <img class="player-image rashford" src="./assets/rashford.png">
+              <p class="player-name">MARCUS RASHFORD</p>
+            </div>
+            <div class="player-container haaland">
+              <img class="player-image haaland" src="./assets/haaland.webp">
+              <p class="player-name">ERLING HAALAND</p>
+            </div>
+            <div class="player-container kane">
+              <img class="player-image kane" src="./assets/kane.png">
+              <p class="player-name">HARRY KANE</p>
+            </div>
+            <div class="player-container salah">
+              <img class="player-image salah" src="./assets/salah.png">
+              <p class="player-name">MO SALAH</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="enter-level-one intermediary hidden">
+          <h3>LEVEL 1<br>YOU WILL BE FACING...<br><span id="southampton">SOUTHAMPTON FC!</span></h3>
+          <div class="opponent-container">
+            <img src="./assets/southampton.gif">
+          </div>
+        </div>
+  
+        <div class="grid hidden">
+        </div>
+  
+        <div class="won-level-one intermediary hidden">
+          <h3>YOU DEFEATED THE SAINTS!<br>NOW YOU WILL BE AGAINST...<br><span id="newcastle">NEWCASTLE UNITED!</span></h3>
+          <div class="opponent-container">
+            <img src="./assets/newcastle.gif">
+          </div>
+          <button class="next-level" id="to-level-two"><img src="./assets/arrow.webp"></button>
+        </div>
+  
+        <div class="won-level-two intermediary hidden">
+          <h3>YOU DEFEATED THE MAGPIES!<br>NOW YOU WILL BE AGAINST...<br><span id="chelsea">CHELSEA FC!</span></h3>
+          <div class="opponent-container">
+            <img src="./assets/chelsea.gif">
+          </div>
+          <button class="next-level" id="to-level-two"><img src="./assets/arrow.webp"></button>
+        </div>
+  
+        <div class="game-over intermediary hidden" id="won-game">
+          <h3>CAMPEONES, CAMPEOMES...<br>OLE, OLE, OLE!</h3>
+          <div class="game-over-container champions tottenham-champions">
+          </div>
+          <h2>PRESS RESTART TO PLAY AGAIN!</h2>
+        </div>
+  
+        <div class="game-over intermediary hidden" id="lost-game">
+          <h3>OH WELL...<br>THERE'S ALWAYS NEXT SEASON!</h3>
+          <div class="game-over-container game-over-lost">
+          </div>
+          <h2>PRESS RESTART TO PLAY AGAIN</h2>
+        </div>
+  
+      </div>
+
+    </div>
+
+    <audio class="pl-anthem" src="./assets/pl-anthem.mp3"></audio>
+    <audio class="click" src="./assets/click.mp3"></audio>
+    <audio class="saints-chant" src="./assets/saints-chant.mp3"></audio>
+
+  </body>
