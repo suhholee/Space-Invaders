@@ -53,6 +53,14 @@ function init() {
   let currentPosition = startingPosition
   const cells = []
 
+  // Starting positions of the opponents
+  let gkOpponent = [3]
+  let opponentsDef = [10, 11, 12, 13, 14, 15, 16]
+  let opponentsMid = [20, 21, 22, 23, 24, 25, 26]
+  let opponentsAtt = [31, 32, 33, 34, 35]
+  // // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid
+  // let totalOpponentArray = gkOpponent.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+
   // * Keyboard(keyCode) variables
   const right = 39
   const left = 37
@@ -65,14 +73,14 @@ function init() {
   // // Lives
   // let lives = 3
 
-  // // Current level
-  // let level = 1
+  // Current level
+  const level = 1
 
   // // Number of opponents
-  // let opponents = 25
+  // let opponentNum = 25
 
-  // // Opponent movement interval
-  // let interval = 1000
+  // Opponent movement interval
+  const interval = 1000
 
   // // Decrease time (used when levels up)
   // const decreaseTime = 200
@@ -83,8 +91,8 @@ function init() {
   // Shot timer
   let shotTimer
 
-  // // Won boolean
-  // let won = true
+  // Won boolean
+  let won = true
 
   // Rashford boolean
   let selectedRashford = false
@@ -97,7 +105,7 @@ function init() {
 
   // Salah boolean
   let selectedSalah = false
-  
+
 
 
   // ! Executions
@@ -180,9 +188,11 @@ function init() {
       saintsChant.play()
       saintsChant.volume = 0.1
       saintsChant.loop = true
+      // Add opponents
+      addOpponent()
+      // Move the opponents ('end game if the player dies' is within the moveOpponents function)
+      moveOpponents()
     }, 3000)
-    // Move the opponents ('end game if the player dies' is within the moveOpponents function)
-    // moveOpponents()
 
     // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
   }
@@ -224,11 +234,12 @@ function init() {
   //   endGame()
   // }
 
-  // // End game function
-  // function endGame() {
-  //   // If the game was ended by losing, boolean won is false and unhide the lost game class element
-  //   // If the game was won at the end, boolean won is true unhide the won game class element
-  // }
+  // End game function
+  function endGame() {
+    // If the game was ended by losing, boolean won is false and unhide the lost game class element
+    // If the game was won at the end, boolean won is true unhide the won game class element
+    console.log('End Game')
+  }
 
   // // Restart game function
   // function restartGame() {
@@ -300,34 +311,110 @@ function init() {
   }
 
 
-  // // * Opponent functions
-  // // Add opponent function
-  // function addOpponent() {
+  // * Opponent functions
+  // Add opponent function
+  function addOpponent() {
+    // Add three different types of opponent images in three different levels
+    if (level === 1) {
+      cells[gkOpponent].classList.add('banzunuOpponent')
+      opponentsDef.forEach(opponents => cells[opponents].classList.add('bednarekOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.add('jwpOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.add('cheOpponent'))
+    } else if (level === 2) {
+      cells[gkOpponent].classList.add('popeOpponent')
+      opponentsDef.forEach(opponents => cells[opponents].classList.add('trippierOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.add('brunoOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.add('wilsonOpponent'))
+    } else if (level === 3) {
+      cells[gkOpponent].classList.add('kepaOpponent')
+      opponentsDef.forEach(opponents => cells[opponents].classList.add('jamesOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.add('mountOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.add('kaiOpponent'))
+    }
+  }
 
-  // }
+  // Remove opponent function
+  function removeOpponent() {
+    // Remove three different types of opponent images in three different levels
+    if (level === 1) {
+      cells[gkOpponent].classList.remove('banzunuOpponent')
+      opponentsDef.forEach(opponents => cells[opponents].classList.remove('bednarekOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.remove('jwpOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.remove('cheOpponent'))
+    } else if (level === 2) {
+      cells[gkOpponent].classList.add('popeOpponent')
+      opponentsDef.forEach(opponents => cells[opponents].classList.remove('trippierOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.remove('brunoOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.remove('wilsonOpponent'))
+    } else if (level === 3) {
+      cells[gkOpponent].classList.add('kepaOpponent')
+      opponentsDef.forEach(opponents => cells[opponents].classList.remove('jamesOpponent'))
+      opponentsMid.forEach(opponents => cells[opponents].classList.remove('mountOpponent'))
+      opponentsAtt.forEach(opponents => cells[opponents].classList.remove('kaiOpponent'))
+    }
+  }
 
-  // // Remove opponent function
-  // function removeOpponent() {
-
-  // }
-
-  // // Move opponent function
-  // function moveOpponents() {
-  //   timer = setInterval(() => {
-  //     // A function that uses add and remove functions to automatically move the 11 opponent players (442 position, 3 rows) within the divs from the top to the bottom using interval times
-  //     // If all of the cells are valid, move all of the cells to either left/right. When not valid, move down. Switch to the left. (For loop)
-  //     // Have a random the opponent shoot footballs every interval
-  //       // When football is shot, change whatever cell it moves (+10 index) to the football using class list add and remove football functions
-  //       // If the player is in the same cell as the football, remove a life and add the hit player CSS style class to the cell's current position
-  //       // If lives is 0, end the game and save the score to the local storage
-  //       if (lives === 0) {
-  //         won = false
-  //         endGame()
-  //       }
-  //       // If the opponent reaches the end grid, end the game and save the score to the local storage
-
-  //   }, interval)
-  // }
+  // Move opponent function
+  function moveOpponents() {
+    // A function that uses add and remove functions to automatically move the opponents within the divs from the top to the bottom using interval times
+    // Variables that track the movement of the opponents
+    let opponentMoved = 0
+    let movesRight = true
+    let movesLeft = false
+    timer = setInterval(() => {
+      // If all of the cells are valid, move all of the cells to right then left and repeat. When not valid, move down. Switch to the left. (For loop)
+      removeOpponent()
+      if (opponentMoved < 3 && movesRight) {
+        gkOpponent = gkOpponent.map(opponent => opponent + 1)
+        opponentsDef = opponentsDef.map(opponent => opponent + 1)
+        opponentsMid = opponentsMid.map(opponent => opponent + 1)
+        opponentsAtt = opponentsAtt.map(opponent => opponent + 1)
+        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + 1)
+        opponentMoved += 1
+      } else if (opponentMoved === 3 && movesRight) {
+        gkOpponent = gkOpponent.map(opponent => opponent + width)
+        opponentsDef = opponentsDef.map(opponent => opponent + width)
+        opponentsMid = opponentsMid.map(opponent => opponent + width)
+        opponentsAtt = opponentsAtt.map(opponent => opponent + width)
+        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
+        opponentMoved = 0
+        movesRight = false
+        movesLeft = true
+      } else if (opponentMoved < 3 && movesLeft) {
+        gkOpponent = gkOpponent.map(opponent => opponent - 1)
+        opponentsDef = opponentsDef.map(opponent => opponent - 1)
+        opponentsMid = opponentsMid.map(opponent => opponent - 1)
+        opponentsAtt = opponentsAtt.map(opponent => opponent - 1)
+        // totalOpponentArray = totalOpponentArray.map(opponent => opponent - 1)
+        opponentMoved += 1
+      } else if (opponentMoved === 3 && movesLeft) {
+        gkOpponent = gkOpponent.map(opponent => opponent + width)
+        opponentsDef = opponentsDef.map(opponent => opponent + width)
+        opponentsMid = opponentsMid.map(opponent => opponent + width)
+        opponentsAtt = opponentsAtt.map(opponent => opponent + width)
+        // totalOpponentArray = totalOpponentArray.map(opponent => opponent + width)
+        opponentMoved = 0
+        movesRight = true
+        movesLeft = false
+      } 
+      // else if (totalOpponentArray.some(opponent => opponent >= 90)) {
+      //   won = false
+      //   clearInterval()
+      //   endGame()
+      // }
+      addOpponent()    
+    
+      // // Have a random the opponent shoot footballs every interval
+      //   // When football is shot, change whatever cell it moves (+10 index) to the football using class list add and remove football functions
+      //   // If the player is in the same cell as the football, remove a life and add the hit player CSS style class to the cell's current position
+      //   // If lives is 0, end the game and save the score to the local storage
+      //   if (lives === 0) {
+      //     won = false
+      //     endGame()
+      //   }
+      //   // If the opponent reaches the end grid, end the game and save the score to the local storage
+    }, interval)
+  }
 
 
   // * Shooting the football functions
@@ -358,7 +445,7 @@ function init() {
         shotIndex -= 10 
         addFootball(shotIndex)
       }, 300)
-      
+
     }
     // When the opponent grid cell is equal to the cell of the football I shot, remove the opponent player and add 10 points to the score
     // When the footblal grid cell is equal to the football that the opponent shot, remove both footballs
