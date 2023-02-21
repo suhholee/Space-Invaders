@@ -305,6 +305,7 @@ h3 {
   width: 10%;
 }
 
+/* ? Players */
 .rashfordPlayer {
   background-image: url('../assets/rashfordPlayer.avif');
   background-repeat: no-repeat;
@@ -329,7 +330,7 @@ h3 {
   background-size: contain;
 }
   
-
+/* ? Footballs */
 .football {
   background-image: url('../assets/football.png');
   background-repeat: no-repeat;
@@ -344,6 +345,7 @@ h3 {
   background-size: 30px;
 }
 
+/* ? Opponentss */
 .banzunuOpponent {
   background-image: url('../assets/banzunu.png');
   background-repeat: no-repeat;
@@ -416,6 +418,7 @@ h3 {
   background-size: contain;
 }
 
+/* ? Card */
 .red-card {
   background-image: url('../assets/red-card.png');
   background-repeat: no-repeat;

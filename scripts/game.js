@@ -274,7 +274,6 @@ function init() {
         movesLeft = false
         // Added the game over function here because this conditional is the point that the opponents reaches the bottom of the grid
         if (totalOpponentArray.some(opponent => opponent >= cellCount - width)) {
-          won = false
           endGameLost()
         }
       } 
@@ -530,19 +529,58 @@ function init() {
     // Set a random variable that starts from a position + width of any one of the opponents
     let randomShotIndex = totalOpponentArray[Math.floor(Math.random() * totalOpponentArray.length)] + width
     // Have a random the opponent shoot footballs every interval
-    // If cell of the opponentFootball contains a player, remove the football and -1 a heart
+    // If cell of the opponentFootball contains a player, change the image using setTimeout and remove the football and -1 a heart
+    // If lives is 0, then clear the interval and end the game as lost
     // If not continue to move on until the ball reaches the bottom row of the grid
     const opponentShotMovement = setInterval(() => {
       // Remove the football when reached the bottom row
       if (randomShotIndex >= cellCount) {
         removeOpponentFootball(randomShotIndex)
-      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer') || cells[randomShotIndex].classList.contains('haalandPlayer') || cells[randomShotIndex].classList.contains('kanePlayer') || cells[randomShotIndex].classList.contains('salahPlayer')) {
+      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer')) {
         removeOpponentFootball(randomShotIndex)
+        whistle.play()
         lives--
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
         clearInterval(opponentShotMovement)
         if (lives === 0) {
           clearInterval(opponentMovements)
+          clearInterval(opponentShotMovement)
+          heartsDisplay.innerHTML = 'GAME OVER'
+          endGameLost()
+        }
+      } else if (cells[randomShotIndex].classList.contains('haalandPlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        whistle.play()
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+        clearInterval(opponentShotMovement)
+        if (lives === 0) {
+          clearInterval(opponentMovements)
+          clearInterval(opponentShotMovement)
+          heartsDisplay.innerHTML = 'GAME OVER'
+          endGameLost()
+        }
+      } else if (cells[randomShotIndex].classList.contains('kanePlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        whistle.play()
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+        clearInterval(opponentShotMovement)
+        if (lives === 0) {
+          clearInterval(opponentMovements)
+          clearInterval(opponentShotMovement)
+          heartsDisplay.innerHTML = 'GAME OVER'
+          endGameLost()
+        }
+      } else if (cells[randomShotIndex].classList.contains('salahPlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        whistle.play()
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+        clearInterval(opponentShotMovement)
+        if (lives === 0) {
+          clearInterval(opponentMovements)
+          clearInterval(opponentShotMovement)
           heartsDisplay.innerHTML = 'GAME OVER'
           endGameLost()
         }
