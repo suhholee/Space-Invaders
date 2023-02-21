@@ -52,6 +52,7 @@ function init() {
   const champione = document.querySelector('.champione')
   toonsChant.volume = 0.1
   bluesChant.volume = 0.1
+  champione.volume = 0.2
   
   // ! Variables
   // * Grid variables
@@ -382,7 +383,7 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
           removeFootball(shotIndex)
-          cells[shotIndex].classList.add('trippierOpponent')
+          cells[shotIndex].classList.remove('trippierOpponent')
           cells[shotIndex].classList.add('red-card')
           siu.play()
           const redCard = setTimeout(() => {
@@ -397,7 +398,7 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
           removeFootball(shotIndex)
-          cells[shotIndex].classList.add('jamesOpponent')
+          cells[shotIndex].classList.remove('jamesOpponent')
           cells[shotIndex].classList.add('red-card')
           siu.play()
           const redCard = setTimeout(() => {
@@ -508,7 +509,6 @@ function init() {
           addFootball(shotIndex)  
         }
       }, 300)
-      console.log(totalOpponentArray.length)
     }
     // When the football grid cell is equal to the football that the opponent shot, remove both footballs
   }
@@ -669,21 +669,25 @@ function init() {
         gameOverChampions.classList.add('manutd-champions')
         bluesChant.pause()
         champione.play()
+        champione.loop = true
       } else if (selectedHaaland === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('mancity-champions')
         bluesChant.pause()
         champione.play()
+        champione.loop = true
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('tottenham-champions')
         bluesChant.pause()
         champione.play()
+        champione.loop = true
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('liverpool-champions')
         bluesChant.pause()
         champione.play()
+        champione.loop = true
       }
     }
   }
@@ -768,7 +772,7 @@ function init() {
     interval -= decreaseInterval
     // Reset starting position
     currentPosition = startingPosition
-    // Unhide level-two class
+    // Enter grid
     wonLevelTwo.classList.add('hidden')
     grid.classList.remove('hidden')
     // Add player
