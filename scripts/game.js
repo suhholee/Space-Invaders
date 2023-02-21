@@ -36,15 +36,20 @@ function init() {
   const gameOverChampions = document.querySelector('.champions')
   
   // Sound effects
+  const muteButton = document.querySelector('#mute')
   const backgroundMusic = document.querySelector('.pl-anthem')
   backgroundMusic.volume = 0.1
   const click = document.querySelector('.click')
-  const saintsChant = document.querySelector('.saints-chant')
   const kick = document.querySelector('.kick')
   const whistle = document.querySelector('.whistle')
   kick.volume = 0.2
   whistle.volume = 0.2
-
+  const saintsChant = document.querySelector('.saints-chant')
+  const toonsChant = document.querySelector('.toons-chant')
+  const bluesChant = document.querySelector('.blues-chant')
+  toonsChant.volume = 0.1
+  bluesChant.volume = 0.1
+  
   // ! Variables
   // * Grid variables
   // Width
@@ -94,23 +99,20 @@ function init() {
   // Opponent movement interval
   let interval = 1000
 
+  // Decrease time (used when levels up)
+  const decreaseInterval = 100
+
   // Opponent shots interval
   let opponentShotInterval
 
-  // Opponent shot movement interval
-  const shotMovementInterval = 300
-
-  // Decrease time (used when levels up)
-  const decreaseTime = 100
+  // Opponent shot movement time
+  const shotMovementTime = 300
 
   // Timeout for entering the game
   let enteringGame
 
   // Timer for the opponent's movement intervals
   let opponentMovements
-
-  // Won boolean
-  let won = true
 
   // Rashford boolean
   let selectedRashford = false
@@ -272,12 +274,8 @@ function init() {
         movesLeft = false
         // Added the game over function here because this conditional is the point that the opponents reaches the bottom of the grid
         if (totalOpponentArray.some(opponent => opponent >= cellCount - width)) {
-          // Pause audio
-          if (!grid.classList.contains('hidden') && level === 1) {
-            saintsChant.pause()
-          }
           won = false
-          endGame()
+          endGameLost()
         }
       } 
       addOpponent()    
@@ -508,6 +506,7 @@ function init() {
           addFootball(shotIndex)  
         }
       }, 300)
+      console.log(totalOpponentArray.length)
     }
     // When the football grid cell is equal to the football that the opponent shot, remove both footballs
   }
@@ -537,27 +536,16 @@ function init() {
       // Remove the football when reached the bottom row
       if (randomShotIndex >= cellCount) {
         removeOpponentFootball(randomShotIndex)
-      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        lives--
-        console.log(lives)
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
-      } else if (cells[randomShotIndex].classList.contains('haalandPlayer')) {
+      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer') || cells[randomShotIndex].classList.contains('haalandPlayer') || cells[randomShotIndex].classList.contains('kanePlayer') || cells[randomShotIndex].classList.contains('salahPlayer')) {
         removeOpponentFootball(randomShotIndex)
         lives--
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
         clearInterval(opponentShotMovement)
-      } else if (cells[randomShotIndex].classList.contains('kanePlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        lives--
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
-      } else if (cells[randomShotIndex].classList.contains('salahPlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        lives--
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
+        if (lives === 0) {
+          clearInterval(opponentMovements)
+          heartsDisplay.innerHTML = 'GAME OVER'
+          endGameLost()
+        }
       } else if (restartButton.addEventListener('click', restartGame)) {
         clearInterval(opponentShotMovement)
       } else {
@@ -565,7 +553,7 @@ function init() {
         randomShotIndex += width
         addOpponentFootball(randomShotIndex)
       }
-    }, shotMovementInterval)
+    }, shotMovementTime)
   }
 
   // * Game functions in order
@@ -606,23 +594,47 @@ function init() {
   }
 
   function statusCheck() {
-    // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
-    if (totalOpponentArray.length === 0) {
-      console.log(totalOpponentArray.length)
-      removePlayer()
-      clearInterval(opponentMovements)
-      opponentMovements = null
-      clearInterval(opponentShotInterval)
-      opponentShotInterval = null
-      // Reset the arrays
-      opponentsGK = [2, 3, 4]
-      opponentsDef = [10, 11, 12, 13, 14, 15, 16]
-      opponentsMid = [20, 21, 22, 23, 24, 25, 26]
-      opponentsAtt = [31, 32, 33, 34, 35]
-      totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
-      if (level === 1) {
-        grid.classList.add('hidden')
-        wonLevelOne.classList.remove('hidden')
+    // Reset the intervals and remove the player
+    removePlayer()
+    clearInterval(opponentMovements)
+    opponentMovements = null
+    clearInterval(opponentShotInterval)
+    opponentShotInterval = null
+    // Reset the arrays
+    opponentsGK = [2, 3, 4]
+    opponentsDef = [10, 11, 12, 13, 14, 15, 16]
+    opponentsMid = [20, 21, 22, 23, 24, 25, 26]
+    opponentsAtt = [31, 32, 33, 34, 35]
+    totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+    // Proceed to the wonLevel/wonGame classes
+    if (level === 1) {
+      grid.classList.add('hidden')
+      wonLevelOne.classList.remove('hidden')
+      saintsChant.pause()
+      saintsChant.currentTime = 0
+      backgroundMusic.play()
+      backgroundMusic.loop = true
+    } else if (level === 2) {
+      grid.classList.add('hidden')
+      wonLevelTwo.classList.remove('hidden')
+      toonsChant.pause()
+      toonsChant.currentTime = 0
+      backgroundMusic.play()
+      backgroundMusic.loop = true
+    } else if (level === 3) {
+      grid.classList.add('hidden')
+      if (selectedRashford === true) {
+        wonGame.classList.remove('hidden')
+        gameOverChampions.classList.add('manutd-champions')
+      } else if (selectedHaaland === true) {
+        wonGame.classList.remove('hidden')
+        gameOverChampions.classList.add('mancity-champions')
+      } else if (selectedKane === true) {
+        wonGame.classList.remove('hidden')
+        gameOverChampions.classList.add('tottenham-champions')
+      } else if (selectedKane === true) {
+        wonGame.classList.remove('hidden')
+        gameOverChampions.classList.add('liverpool-champions')
       }
     }
   }
@@ -649,55 +661,92 @@ function init() {
       // Move the opponents ('end game if the player dies' is within the moveOpponents function)
       moveOpponents()
       // Apply the random football shots function in here
-      opponentShotInterval = setInterval(() => opponentShots(), 1500)
-      statusCheck()
+      opponentShotInterval = setInterval(() => {
+        if (totalOpponentArray.length === 0) {
+          statusCheck()
+        }
+        opponentShots()
+        // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
+      }, 1500)
     }, 3000)
   }
 
   // Level two function
   function levelTwo() {
+    // Background chant changed
+    backgroundMusic.pause()
+    backgroundMusic.currentTime = 0
+    toonsChant.play()
+    toonsChant.loop = true
     // Set the current level display inner HTML as 2
     level = 2
     currentLevelDisplay.innerHTML = level
     // Interval is shortened
-    interval -= decreaseTime
+    interval -= decreaseInterval
     // Reset starting position
     currentPosition = startingPosition
     // Unhide level-two class
     wonLevelOne.classList.add('hidden')
     grid.classList.remove('hidden')
+    // Add player
+    addPlayer(currentPosition)
     // Add opponents the total array of opponents
     addOpponent()
     // Apply move opponent function with the new interval (end game is within the moveOpponents function)
     moveOpponents()
     // Apply the random football shots function in here
-    opponentShotInterval = setInterval(() => opponentShots(), 1200)
+    opponentShotInterval = setInterval(() => {
+      if (totalOpponentArray.length === 0) {
+        statusCheck()
+      }
+      opponentShots()
+    }, 1200)
     // If let opponents is zero in level two, unhide the won-level-two div class, temporarily stop the keyboards from activating, hide the grid.
   }
 
-  // // Level three function
-  // function levelThree() {
-  //   // Set the current level display inner HTML as 3
-  //   level = 3
-  //   currentLevelDisplay.innerHTML = level
-  //   // Reset opponent number
-  //   opponents = 11
-  //   // Interval is shortened again
-  //   interval -= (decreaseTime) * 2
-  //   // Reset starting position
-  //   currentPosition = startingPosition
-  //   // Unhide level-three class
-
-  //   // Apply move opponent function with the new interval (end game is within the moveOpponents function)
-  //   moveOpponents()
-  //   // If level three is completed, boolean won is true, unhide the won-game class, temporarily stop the keyboards from activating, and save the score to the local storage.
-  //   endGame()
-  // }
+  // Level three function
+  function levelThree() {
+    // Background chant changed
+    bluesChant.play()
+    bluesChant.loop = true
+    backgroundMusic.pause()
+    backgroundMusic.currentTime = 0
+    // Set the current level display inner HTML as 3
+    level = 3
+    currentLevelDisplay.innerHTML = level
+    // Interval is shortened
+    interval -= decreaseInterval
+    // Reset starting position
+    currentPosition = startingPosition
+    // Unhide level-two class
+    wonLevelTwo.classList.add('hidden')
+    grid.classList.remove('hidden')
+    // Add player
+    addPlayer(currentPosition)
+    // Add opponents the total array of opponents
+    addOpponent()
+    // Apply move opponent function with the new interval (end game is within the moveOpponents function)
+    moveOpponents()
+    // Apply the random football shots function in here
+    opponentShotInterval = setInterval(() => {
+      if (totalOpponentArray.length === 0) {
+        statusCheck()
+      }
+      opponentShots()
+    }, 900)
+  }
 
   // End game function
-  function endGame() {
-    // If the game was ended by losing, boolean won is false and unhide the lost game class element
-    // If the game was won at the end, boolean won is true unhide the won game class element
+  function endGameLost() {
+    // Pause audio
+    if (!grid.classList.contains('hidden') && level === 1) {
+      saintsChant.pause()
+    } else if (!grid.classList.contains('hidden') && level === 2) {
+      toonsChant.pause()
+    } else if (!grid.classList.contains('hidden') && level === 3) {
+      bluesChant.pause()
+    }
+    // Clear intervals
     clearInterval(opponentMovements)
     grid.classList.add('hidden')
     lostGame.classList.remove('hidden')
@@ -776,6 +825,13 @@ function init() {
     click.play()
   }  
 
+  // Mute audio function
+  function muteAudio() {
+    backgroundMusic.muted = true
+    saintsChant.muted = true
+    toonsChant.muted = true
+    bluesChant.muted = true
+  }
 
 
   // ! Events
@@ -789,10 +845,12 @@ function init() {
   document.addEventListener('keydown', myShot)
   // When the "to the next level button" is pressed after level one, move to level two.
   toLevelTwoButton.addEventListener('click', levelTwo)
-  // // When the "to the next level button" is pressed, move to level three.
-  // toLevelThreeButton.addEventListener('click', levelThree)
+  // When the "to the next level button" is pressed, move to level three.
+  toLevelThreeButton.addEventListener('click', levelThree)
   // Restart Game
   restartButton.addEventListener('click', restartGame)
+  // Mute audio
+  muteButton.addEventListener('click', muteAudio)
   
   // ! Page load
   createGrid()
