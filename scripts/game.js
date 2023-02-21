@@ -32,7 +32,7 @@ function init() {
   const wonGame = document.querySelector('.won-game')
   const lostGame = document.querySelector('.lost-game')
   const toLevelTwoButton = document.querySelector('#to-level-two')
-  const toLevelThreeButton = document.querySelector('#to-level-two')
+  const toLevelThreeButton = document.querySelector('#to-level-three')
   const gameOverChampions = document.querySelector('.champions')
   
   // Sound effects
@@ -689,13 +689,14 @@ function init() {
       // Pause background music
       backgroundMusic.pause()
       backgroundMusic.currentTime = 0
-      enterLevelOne.classList.add('hidden')
-      grid.classList.remove('hidden')
-      addPlayer(startingPosition)
       // Start Saints chant
       saintsChant.play()
       saintsChant.volume = 0.1
       saintsChant.loop = true
+      // Enter the grid
+      enterLevelOne.classList.add('hidden')
+      grid.classList.remove('hidden')
+      addPlayer(startingPosition)
       // Add opponents the total array of opponents
       addOpponent()
       // Move the opponents ('end game if the player dies' is within the moveOpponents function)
@@ -725,7 +726,7 @@ function init() {
     interval -= decreaseInterval
     // Reset starting position
     currentPosition = startingPosition
-    // Unhide level-two class
+    // Enter the grid
     wonLevelOne.classList.add('hidden')
     grid.classList.remove('hidden')
     // Add player
@@ -747,10 +748,10 @@ function init() {
   // Level three function
   function levelThree() {
     // Background chant changed
-    bluesChant.play()
-    bluesChant.loop = true
     backgroundMusic.pause()
     backgroundMusic.currentTime = 0
+    bluesChant.play()
+    bluesChant.loop = true
     // Set the current level display inner HTML as 3
     level = 3
     currentLevelDisplay.innerHTML = level
