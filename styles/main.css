@@ -336,6 +336,13 @@ h3 {
   background-size: 30px;
 }
 
+.opponent-football {
+  background-image: url('../assets/opponentFootball.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 30px;
+}
+
 .banzunuOpponent {
   background-image: url('../assets/banzunu.png');
   background-repeat: no-repeat;

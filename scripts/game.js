@@ -86,6 +86,9 @@ function init() {
   // Opponent movement interval
   let interval = 1000
 
+  // Opponent shot movement interval
+  const shotMovementInterval = 500
+
   // Decrease time (used when levels up)
   const decreaseTime = 100
 
@@ -145,7 +148,7 @@ function init() {
     }
     // Click button audio
     click.play()
-    // Start the game 2-3 seconds after after the player is selected
+    // Start the game a little bit after after the player is selected
     setTimeout(() => startGame(), 100)
   }
 
@@ -416,7 +419,7 @@ function init() {
     let movesLeft = false
     const movementLength = width - opponentsDef.length
     opponentMovements = setInterval(() => {
-      // If all of the cells are valid, move all of the cells to right then left and repeat. When not valid, move down. Switch to the left. (For loop)
+      // Set conditionals to check whether the movement is left or right. After a certain duration of movement, 
       removeOpponent()
       if (opponentMoved < movementLength && movesRight) {
         opponentsGK = opponentsGK.map(opponent => opponent + 1)
@@ -450,7 +453,7 @@ function init() {
         opponentMoved = 0
         movesRight = true
         movesLeft = false
-        // Added the game over function here because this conditional is point that the opponents reaches the bottom of the grid
+        // Added the game over function here because this conditional is the point that the opponents reaches the bottom of the grid
         if (totalOpponentArray.some(opponent => opponent >= cellCount - width)) {
           // Pause audio
           if (!grid.classList.contains('hidden') && level === 1) {
@@ -459,31 +462,23 @@ function init() {
           won = false
           endGame()
         }
-      }
+      } 
       addOpponent()    
-    
-      // // Have a random the opponent shoot footballs every interval
-      //   // When football is shot, change whatever cell it moves (+10 index) to the football using class list add and remove football functions
-      //   // If the player is in the same cell as the football, remove a life and add the hit player CSS style class to the cell's current position
-      //   // If lives is 0, end the game and save the score to the local storage
-      //   if (lives === 0) {
-      //     won = false
-      //     endGame()
-      //   }
-      //   // If the opponent reaches the end grid, end the game and save the score to the local storage
     }, interval)
+    // Apply the random football shots function in here
+    setInterval(() => opponentShots(), 1500)
   }
 
 
   // * Shooting the football functions
-  // Add football function
+  // Add my football function
   function addFootball(position) {
     if (position >= 0) {
       cells[position].classList.add('football')
     }
   }
 
-  // Remove football function
+  // Remove my football function
   function removeFootball(position) {
     if (position >= 0) {
       cells[position].classList.remove('football')
@@ -502,24 +497,32 @@ function init() {
       // Rather than declaring a global variable, the interval variable is declared here.
       const shotMovement = setInterval(() => {
         // When the opponent grid cell is equal to the cell of the football I shot, remove the opponent player, the football, the shotIndex value within the four opponents array and add 10 points to the score
+        // Remove football when reached the top row
         if (shotIndex < width) {
           removeFootball(shotIndex)
         } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
-          cells[shotIndex].classList.remove('banzunuOpponent', 'football')
+          // Remove the football and the opponent image
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('banzunuOpponent')
+          // Add the red card until the interval ends
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
+          // Remove the index of the opponent that was hit in the arrays
           const opponentIndex = opponentsGK.indexOf(shotIndex)
           opponentsGK.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
           totalOpponentArray.splice(totalOpponentIndex, 1)
+          // Increment the score
           score += 10
           scoreDisplay.innerHTML = score
+          // Clear the interval
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('popeOpponent')) {
-          cells[shotIndex].classList.remove('popeOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('popeOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -533,7 +536,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
-          cells[shotIndex].classList.remove('kepaOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('kepaOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -547,7 +551,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
-          cells[shotIndex].classList.remove('bednarekOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('bednarekOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -561,7 +566,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
-          cells[shotIndex].classList.add('trippierOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.add('trippierOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -575,7 +581,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
-          cells[shotIndex].classList.add('jamesOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.add('jamesOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -589,7 +596,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
-          cells[shotIndex].classList.remove('jwpOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('jwpOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -603,7 +611,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
-          cells[shotIndex].classList.remove('brunoOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('brunoOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -617,7 +626,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('mountOpponent')) {
-          cells[shotIndex].classList.remove('mountOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('mountOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -631,7 +641,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('cheOpponent')) {
-          cells[shotIndex].classList.remove('cheOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('cheOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -645,7 +656,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
-          cells[shotIndex].classList.remove('wilsonOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('wilsonOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -659,7 +671,8 @@ function init() {
           scoreDisplay.innerHTML = score
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
-          cells[shotIndex].classList.remove('kaiOpponent', 'football')
+          removeFootball(shotIndex)
+          cells[shotIndex].classList.remove('kaiOpponent')
           cells[shotIndex].classList.add('red-card')
           whistle.play()
           const redCard = setTimeout(() => {
@@ -681,9 +694,68 @@ function init() {
         }
       }, 300)
     }
-    // When the footblal grid cell is equal to the football that the opponent shot, remove both footballs
+    // When the football grid cell is equal to the football that the opponent shot, remove both footballs
   }
 
+  // Add my football function
+  function addOpponentFootball(position) {
+    if (position < cellCount) {
+      cells[position].classList.add('opponent-football')
+    }
+  }
+
+  // Remove my football function
+  function removeOpponentFootball(position) {
+    if (position < cellCount) {
+      cells[position].classList.remove('opponent-football')
+    }
+  }
+
+  // Opponent shoots the ball function
+  function opponentShots() {
+    // Set a random variable that starts from a position + width of any one of the opponents
+    let randomShotIndex = totalOpponentArray[Math.floor(Math.random() * totalOpponentArray.length)] + width
+    // Have a random the opponent shoot footballs every interval
+    // If cell of the opponentFootball contains a player, remove the football and -1 a heart
+    // If not continue to move on until the ball reaches the bottom row of the grid
+    const opponentShotInterval = setInterval(() => {
+      // Remove the football when reached the bottom row
+      if (randomShotIndex >= cellCount - width) {
+        removeOpponentFootball(randomShotIndex)
+      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        clearInterval(opponentShotInterval)
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+      } else if (cells[randomShotIndex].classList.contains('haalandPlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        clearInterval(opponentShotInterval)
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+      } else if (cells[randomShotIndex].classList.contains('kanePlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        clearInterval(opponentShotInterval)
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+      } else if (cells[randomShotIndex].classList.contains('salahPlayer')) {
+        removeOpponentFootball(randomShotIndex)
+        clearInterval(opponentShotInterval)
+        lives--
+        heartsDisplay.innerHTML = '❤️'.repeat(lives)
+      } else if (restartButton.addEventListener('click', restartGame)) {
+        clearInterval(opponentShotInterval)
+      } else {
+        removeOpponentFootball(randomShotIndex)
+        randomShotIndex += width
+        addOpponentFootball(randomShotIndex)
+      }
+    }, shotMovementInterval)
+    // If lives is 0, end the game and save the score to the local storage
+    if (lives === 0) {
+      won = false
+      endGame()
+    }
+  }
 
 
   // ! Events
