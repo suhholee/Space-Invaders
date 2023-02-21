@@ -42,8 +42,10 @@ function init() {
   const click = document.querySelector('.click')
   const kick = document.querySelector('.kick')
   const whistle = document.querySelector('.whistle')
+  const siu = document.querySelector('.siu')
   kick.volume = 0.2
   whistle.volume = 0.2
+  siu.volume = 0.5
   const saintsChant = document.querySelector('.saints-chant')
   const toonsChant = document.querySelector('.toons-chant')
   const bluesChant = document.querySelector('.blues-chant')
@@ -318,7 +320,7 @@ function init() {
           cells[shotIndex].classList.remove('banzunuOpponent')
           // Add the red card until the interval ends
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -336,7 +338,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('popeOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -351,7 +353,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('kepaOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -366,7 +368,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('bednarekOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -381,7 +383,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.add('trippierOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -396,7 +398,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.add('jamesOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -411,7 +413,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('jwpOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -426,7 +428,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('brunoOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -441,7 +443,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('mountOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -456,7 +458,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('cheOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -471,7 +473,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('wilsonOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -486,7 +488,7 @@ function init() {
           removeFootball(shotIndex)
           cells[shotIndex].classList.remove('kaiOpponent')
           cells[shotIndex].classList.add('red-card')
-          whistle.play()
+          siu.play()
           const redCard = setTimeout(() => {
             cells[shotIndex].classList.remove('red-card')
           }, 300)
@@ -543,7 +545,7 @@ function init() {
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
         clearInterval(opponentShotMovement)
         if (lives === 0) {
-          clearInterval(opponentMovements)
+          clearInterval(opponentShotInterval)
           clearInterval(opponentShotMovement)
           heartsDisplay.innerHTML = 'GAME OVER'
           endGameLost()
@@ -555,7 +557,7 @@ function init() {
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
         clearInterval(opponentShotMovement)
         if (lives === 0) {
-          clearInterval(opponentMovements)
+          clearInterval(opponentShotInterval)
           clearInterval(opponentShotMovement)
           heartsDisplay.innerHTML = 'GAME OVER'
           endGameLost()
@@ -567,7 +569,7 @@ function init() {
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
         clearInterval(opponentShotMovement)
         if (lives === 0) {
-          clearInterval(opponentMovements)
+          clearInterval(opponentShotInterval)
           clearInterval(opponentShotMovement)
           heartsDisplay.innerHTML = 'GAME OVER'
           endGameLost()
@@ -579,7 +581,7 @@ function init() {
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
         clearInterval(opponentShotMovement)
         if (lives === 0) {
-          clearInterval(opponentMovements)
+          clearInterval(opponentShotInterval)
           clearInterval(opponentShotMovement)
           heartsDisplay.innerHTML = 'GAME OVER'
           endGameLost()
