@@ -5,15 +5,14 @@ function init() {
   const startPage = document.querySelector('.start-page')
   const trophy = document.querySelector('.trophy')
   const gameContainer = document.querySelector('.container')
-  const backgroundMusic = document.querySelector('.pl-anthem')
-
+  
   // Left container elements
   const restartButton = document.querySelector('#restart')
   const scoreDisplay = document.querySelector('#current-score')
   const highScoreDisplay = document.querySelector('#high-score')
   const heartsDisplay = document.querySelector('#hearts')
   const currentLevelDisplay = document.querySelector('#current-level')
-
+  
   // Select player display
   const selectPlayerDisplay = document.querySelector('.select-player')
   const playerContainer = document.querySelectorAll('.player-container')
@@ -21,24 +20,30 @@ function init() {
   const haaland = document.querySelector('.haaland')
   const kane = document.querySelector('.kane')
   const salah = document.querySelector('.salah')
-  const click = document.querySelector('.click')
   
   // Entering the game
   const gridWrapper = document.querySelector('.grid-wrapper')
   const enterLevelOne = document.querySelector('.enter-level-one')
   const grid = document.querySelector('.grid')
-
-  // // Different levels
-  // const wonLevelOne = document.querySelector('.won-level-one')
-  // const wonLevelTwo = document.querySelector('.won-level-two')
-  // const wonGame = document.querySelector('.won-game')
-  // const lostGame = document.querySelector('.lost-game')
-  // const toLevelTwo = document.querySelector('#to-level-two')
-  // const toLevelThree = document.querySelector('#to-level-two')
-  // const gameOverChampions = document.querySelector('.champions')
-
-  // Chants audio
+  
+  // Different levels
+  const wonLevelOne = document.querySelector('.won-level-one')
+  const wonLevelTwo = document.querySelector('.won-level-two')
+  const wonGame = document.querySelector('.won-game')
+  const lostGame = document.querySelector('.lost-game')
+  const toLevelTwoButton = document.querySelector('#to-level-two')
+  const toLevelThreeButton = document.querySelector('#to-level-two')
+  const gameOverChampions = document.querySelector('.champions')
+  
+  // Sound effects
+  const backgroundMusic = document.querySelector('.pl-anthem')
+  backgroundMusic.volume = 0.1
+  const click = document.querySelector('.click')
   const saintsChant = document.querySelector('.saints-chant')
+  const kick = document.querySelector('.kick')
+  const whistle = document.querySelector('.whistle')
+  kick.volume = 0.2
+  whistle.volume = 0.2
 
   // ! Variables
   // * Grid variables
@@ -59,7 +64,8 @@ function init() {
   let opponentsDef = [10, 11, 12, 13, 14, 15, 16]
   let opponentsMid = [20, 21, 22, 23, 24, 25, 26]
   let opponentsAtt = [31, 32, 33, 34, 35]
-  // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid
+
+  // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid and to check if all of the opponents were removed (then proceed to the next level)
   let totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
 
   // * Keyboard(keyCode) variables
@@ -71,17 +77,20 @@ function init() {
   // Score
   let score = 0
 
-  // // Lives
-  // let lives = 3
+  // Lives
+  let lives = 3
 
   // Current level
-  const level = 1
+  let level = 1
 
   // Opponent movement interval
-  const interval = 1000
+  let interval = 1000
 
-  // // Decrease time (used when levels up)
-  // const decreaseTime = 200
+  // Decrease time (used when levels up)
+  const decreaseTime = 100
+
+  // Timeout for entering the game
+  let enteringGame
 
   // Timer for the opponent's movement intervals
   let opponentMovements
@@ -113,7 +122,6 @@ function init() {
     click.play()
     // Play background music
     backgroundMusic.play()
-    backgroundMusic.volume = 0.1
     backgroundMusic.loop = true
   }
 
@@ -172,7 +180,7 @@ function init() {
     selectPlayerDisplay.classList.add('hidden')
     // Unhide enter-level-one class and give an interval of 2 seconds and unhide grid class
     enterLevelOne.classList.remove('hidden')
-    setTimeout(() => {
+    enteringGame = setTimeout(() => {
       // Pause background music
       backgroundMusic.pause()
       backgroundMusic.currentTime = 0
@@ -190,6 +198,10 @@ function init() {
     }, 3000)
 
     // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
+    if (totalOpponentArray.length === 0) {
+      grid.classList.add('hidden')
+      wonLevelOne.classList.remove('hidden')
+    }
   }
 
   // // Level two function
@@ -234,35 +246,80 @@ function init() {
     // If the game was ended by losing, boolean won is false and unhide the lost game class element
     // If the game was won at the end, boolean won is true unhide the won game class element
     clearInterval(opponentMovements)
+    grid.classList.add('hidden')
+    lostGame.classList.remove('hidden')
+    backgroundMusic.play()
+    backgroundMusic.loop = true
     console.log('End Game')
   }
 
-  // // Restart game function
-  // function restartGame() {
-  //   // Return to select player
-  //   selectPlayer()
-  //   // Cleanup in case a previous interval is running
-  //   // Clear timer interval
-  //   clearInterval(timer)
-  //   // Reset the opponents
-  //   opponents = 11
-  //   // Reset the score
-  //   score = 0
-  //   // Reset lives
-  //   lives = 3
-  //   // Reset current level
-  //   level = 1
-  //   currentLevelDisplay.innerHTML = level
-  //   // Reset interval
-  //   interval = 1000
-  //   // Reset starting position
-  //   currentPosition = startingPosition
-  //   // Reset the hearts display
-  //   heartsDisplay.innerHTML = '❤️'.repeat(lives)
-  //   Reset song
-  // // Click button audio
-  //   click.play()
-  // }
+  // Restart game function
+  function restartGame() {
+    // Return to select player for each display
+    if (!selectPlayerDisplay.classList.contains('hidden')) {
+      selectPlayerDisplay.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!enterLevelOne.classList.contains('hidden')) {
+      // Clear enter game timeout
+      clearInterval(enteringGame)
+      enteringGame = null
+      enterLevelOne.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!grid.classList.contains('hidden')) {
+      grid.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!lostGame.classList.contains('hidden')) {
+      lostGame.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!wonLevelOne.classList.contains('hidden')) {
+      wonLevelOne.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!wonLevelTwo.classList.contains('hidden')) {
+      wonLevelTwo.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!wonGame.classList.contains('hidden')) {
+      wonGame.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    } else if (!gameOverChampions.classList.contains('hidden')) {
+      gameOverChampions.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+    }
+    // Remove clicked class from the select player containers
+    rashford.classList.remove('clicked')
+    haaland.classList.remove('clicked')
+    kane.classList.remove('clicked')
+    salah.classList.remove('clicked')
+    // Clear opponents and their movement interval
+    removeOpponent()
+    clearInterval(opponentMovements)
+    opponentMovements = null
+    // Reset the arrays
+    opponentsGK = [2, 3, 4]
+    opponentsDef = [10, 11, 12, 13, 14, 15, 16]
+    opponentsMid = [20, 21, 22, 23, 24, 25, 26]
+    opponentsAtt = [31, 32, 33, 34, 35]
+    totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+    // Reset the score
+    score = 0
+    scoreDisplay.innerHTML = score
+    // Reset lives
+    lives = 3
+    // Reset the hearts display
+    heartsDisplay.innerHTML = '❤️'.repeat(lives)
+    // Reset current level
+    level = 1
+    currentLevelDisplay.innerHTML = level
+    // Reset interval
+    interval = 1000
+    // Reset starting position
+    currentPosition = startingPosition
+    // Reset song
+    saintsChant.pause()
+    saintsChant.currentTime = 0
+    backgroundMusic.play()
+    // Click button audio
+    click.play()
+  }
   
 
   // * Player functions
@@ -395,6 +452,10 @@ function init() {
         movesLeft = false
         // Added the game over function here because this conditional is point that the opponents reaches the bottom of the grid
         if (totalOpponentArray.some(opponent => opponent >= cellCount - width)) {
+          // Pause audio
+          if (!grid.classList.contains('hidden') && level === 1) {
+            saintsChant.pause()
+          }
           won = false
           endGame()
         }
@@ -433,6 +494,8 @@ function init() {
   function myShot(e) {
     if (e.keyCode === space) {
       e.preventDefault()
+      // Sound effects
+      kick.play()
       // Ball position at start (right above cell of the player image)
       let shotIndex = currentPosition - width 
       addFootball(shotIndex)
@@ -444,6 +507,10 @@ function init() {
         } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
           cells[shotIndex].classList.remove('banzunuOpponent', 'football')
           cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsGK.indexOf(shotIndex)
           opponentsGK.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -453,6 +520,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('popeOpponent')) {
           cells[shotIndex].classList.remove('popeOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsGK.indexOf(shotIndex)
           opponentsGK.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -462,6 +534,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
           cells[shotIndex].classList.remove('kepaOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsGK.indexOf(shotIndex)
           opponentsGK.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -471,6 +548,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
           cells[shotIndex].classList.remove('bednarekOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsDef.indexOf(shotIndex)
           opponentsDef.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -480,6 +562,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
           cells[shotIndex].classList.add('trippierOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsDef.indexOf(shotIndex)
           opponentsDef.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -489,6 +576,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
           cells[shotIndex].classList.add('jamesOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsDef.indexOf(shotIndex)
           opponentsDef.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -498,6 +590,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
           cells[shotIndex].classList.remove('jwpOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsMid.indexOf(shotIndex)
           opponentsMid.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -507,6 +604,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
           cells[shotIndex].classList.remove('brunoOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsMid.indexOf(shotIndex)
           opponentsMid.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -516,6 +618,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('mountOpponent')) {
           cells[shotIndex].classList.remove('mountOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsMid.indexOf(shotIndex)
           opponentsMid.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -525,6 +632,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('cheOpponent')) {
           cells[shotIndex].classList.remove('cheOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsAtt.indexOf(shotIndex)
           opponentsAtt.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -534,6 +646,11 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
           cells[shotIndex].classList.remove('wilsonOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsAtt.indexOf(shotIndex)
           opponentsAtt.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
@@ -543,12 +660,19 @@ function init() {
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
           cells[shotIndex].classList.remove('kaiOpponent', 'football')
+          cells[shotIndex].classList.add('red-card')
+          whistle.play()
+          const redCard = setTimeout(() => {
+            cells[shotIndex].classList.remove('red-card')
+          }, 300)
           const opponentIndex = opponentsAtt.indexOf(shotIndex)
           opponentsAtt.splice(opponentIndex, 1)
           const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
           totalOpponentArray.splice(totalOpponentIndex, 1)
           score += 10
           scoreDisplay.innerHTML = score
+          clearInterval(shotMovement)
+        } else if (restartButton.addEventListener('click', restartGame)) {
           clearInterval(shotMovement)
         } else {
           removeFootball(shotIndex)
@@ -575,8 +699,8 @@ function init() {
   // toLevelTwo.addEventListener('click', levelTwo)
   // // When the "to the next level button" is pressed, move to level three.
   // toLevelThree.addEventListener('click', levelThree)
-  // // Restart Game
-  // restartButton.addEventListener('click', restartGame)
+  // Restart Game
+  restartButton.addEventListener('click', restartGame)
   
   // ! Page load
   createGrid()
