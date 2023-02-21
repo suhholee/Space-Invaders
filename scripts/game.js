@@ -49,6 +49,7 @@ function init() {
   const saintsChant = document.querySelector('.saints-chant')
   const toonsChant = document.querySelector('.toons-chant')
   const bluesChant = document.querySelector('.blues-chant')
+  const champione = document.querySelector('.champione')
   toonsChant.volume = 0.1
   bluesChant.volume = 0.1
   
@@ -666,15 +667,23 @@ function init() {
       if (selectedRashford === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('manutd-champions')
+        bluesChant.pause()
+        champione.play()
       } else if (selectedHaaland === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('mancity-champions')
+        bluesChant.pause()
+        champione.play()
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('tottenham-champions')
+        bluesChant.pause()
+        champione.play()
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('liverpool-champions')
+        bluesChant.pause()
+        champione.play()
       }
     }
   }
@@ -808,24 +817,48 @@ function init() {
       enteringGame = null
       enterLevelOne.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
-    } else if (!grid.classList.contains('hidden')) {
+    } else if (!grid.classList.contains('hidden') && level === 1) {
       grid.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
+      // Reset song
+      saintsChant.pause()
+      saintsChant.currentTime = 0
+    } else if (!grid.classList.contains('hidden') && level === 2) {
+      grid.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+      // Reset song
+      toonsChant.pause()
+      toonsChant.currentTime = 0
+    } else if (!grid.classList.contains('hidden') && level === 3) {
+      grid.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+      // Reset song
+      bluesChant.pause()
+      bluesChant.currentTime = 0
     } else if (!lostGame.classList.contains('hidden')) {
       lostGame.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
+      // Reset song
+      backgroundMusic.pause()
+      backgroundMusic.currentTime = 0
     } else if (!wonLevelOne.classList.contains('hidden')) {
       wonLevelOne.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
+      // Reset song
+      backgroundMusic.pause()
+      backgroundMusic.currentTime = 0
     } else if (!wonLevelTwo.classList.contains('hidden')) {
       wonLevelTwo.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
+      // Reset song
+      backgroundMusic.pause()
+      backgroundMusic.currentTime = 0
     } else if (!wonGame.classList.contains('hidden')) {
       wonGame.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
-    } else if (!gameOverChampions.classList.contains('hidden')) {
-      gameOverChampions.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
+      champione.pause()
+      champione.currentTime = 0
+      backgroundMusic.play()
     }
     // Remove clicked class from the select player containers
     rashford.classList.remove('clicked')
@@ -858,9 +891,7 @@ function init() {
     interval = 1000
     // Reset starting position
     currentPosition = startingPosition
-    // Reset song
-    saintsChant.pause()
-    saintsChant.currentTime = 0
+    // Play background music
     backgroundMusic.play()
     // Click button audio
     click.play()
