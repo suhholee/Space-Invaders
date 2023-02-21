@@ -72,6 +72,14 @@ function init() {
   const right = 39
   const left = 37
   const space = 32
+  // How to disable keyboard when not in grid
+  // document.onkeydown = function (e) {
+  //   return false
+  // }
+  // grid.onkeydown = function (e) {
+  //   return true
+  // }
+
 
   // * Other variables
   // Score
@@ -90,7 +98,7 @@ function init() {
   let opponentShotInterval
 
   // Opponent shot movement interval
-  const shotMovementInterval = 500
+  const shotMovementInterval = 300
 
   // Decrease time (used when levels up)
   const decreaseTime = 100
@@ -125,8 +133,6 @@ function init() {
     for (let i = 0; i < cellCount; i++) {
       // Create div
       const cell = document.createElement('div')
-      // Add index as innerText
-      cell.innerHTML = i
       // Data attribute represeting the index
       cell.setAttribute('data-index', i)
       // Append to grid
@@ -529,48 +535,28 @@ function init() {
     // If not continue to move on until the ball reaches the bottom row of the grid
     const opponentShotMovement = setInterval(() => {
       // Remove the football when reached the bottom row
-      if (randomShotIndex >= cellCount - width) {
+      if (randomShotIndex >= cellCount) {
         removeOpponentFootball(randomShotIndex)
       } else if (cells[randomShotIndex].classList.contains('rashfordPlayer')) {
         removeOpponentFootball(randomShotIndex)
         lives--
         console.log(lives)
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        // If lives is 0, end the game and save the score to the local storage
-        if (lives === 0) {
-          won = false
-          endGame()
-        }
         clearInterval(opponentShotMovement)
       } else if (cells[randomShotIndex].classList.contains('haalandPlayer')) {
         removeOpponentFootball(randomShotIndex)
         lives--
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        // If lives is 0, end the game and save the score to the local storage
-        if (lives === 0) {
-          won = false
-          endGame()
-        }
         clearInterval(opponentShotMovement)
       } else if (cells[randomShotIndex].classList.contains('kanePlayer')) {
         removeOpponentFootball(randomShotIndex)
         lives--
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        // If lives is 0, end the game and save the score to the local storage
-        if (lives === 0) {
-          won = false
-          endGame()
-        }
         clearInterval(opponentShotMovement)
       } else if (cells[randomShotIndex].classList.contains('salahPlayer')) {
         removeOpponentFootball(randomShotIndex)
         lives--
         heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        // If lives is 0, end the game and save the score to the local storage
-        if (lives === 0) {
-          won = false
-          endGame()
-        }
         clearInterval(opponentShotMovement)
       } else if (restartButton.addEventListener('click', restartGame)) {
         clearInterval(opponentShotMovement)
@@ -582,6 +568,7 @@ function init() {
     }, shotMovementInterval)
   }
 
+  // * Game functions in order
   // Enter the game function
   function enterGame(e) {
     // Hide and unhide div classes
@@ -618,6 +605,28 @@ function init() {
     setTimeout(() => startGame(), 300)
   }
 
+  function statusCheck() {
+    // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
+    if (totalOpponentArray.length === 0) {
+      console.log(totalOpponentArray.length)
+      removePlayer()
+      clearInterval(opponentMovements)
+      opponentMovements = null
+      clearInterval(opponentShotInterval)
+      opponentShotInterval = null
+      // Reset the arrays
+      opponentsGK = [2, 3, 4]
+      opponentsDef = [10, 11, 12, 13, 14, 15, 16]
+      opponentsMid = [20, 21, 22, 23, 24, 25, 26]
+      opponentsAtt = [31, 32, 33, 34, 35]
+      totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+      if (level === 1) {
+        grid.classList.add('hidden')
+        wonLevelOne.classList.remove('hidden')
+      }
+    }
+  }
+
   // Start game function
   function startGame() {
     // Hide the select player class
@@ -640,32 +649,31 @@ function init() {
       // Move the opponents ('end game if the player dies' is within the moveOpponents function)
       moveOpponents()
       // Apply the random football shots function in here
-      opponentShotInterval = setInterval(() => opponentShots(), 2000)
+      opponentShotInterval = setInterval(() => opponentShots(), 1500)
+      statusCheck()
     }, 3000)
-    // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
-    if (totalOpponentArray.length === 0) {
-      grid.classList.add('hidden')
-      wonLevelOne.classList.remove('hidden')
-    }
   }
 
-  // // Level two function
-  // function levelTwo() {
-  //   // Set the current level display inner HTML as 2
-  //   level = 2
-  //   currentLevelDisplay.innerHTML = level
-  //   // Reset opponent number
-  //   opponents = 11
-  //   // Interval is shortened
-  //   interval -= decreaseTime
-  //   // Reset starting position
-  //   currentPosition = startingPosition
-  //   // Unhide level-two class
-
-  //   // Apply move opponent function with the new interval (end game is within the moveOpponents function)
-  //   moveOpponents()
-  //   // If let opponents is zero in level two, unhide the won-level-two div class, temporarily stop the keyboards from activating, hide the grid.
-  // }
+  // Level two function
+  function levelTwo() {
+    // Set the current level display inner HTML as 2
+    level = 2
+    currentLevelDisplay.innerHTML = level
+    // Interval is shortened
+    interval -= decreaseTime
+    // Reset starting position
+    currentPosition = startingPosition
+    // Unhide level-two class
+    wonLevelOne.classList.add('hidden')
+    grid.classList.remove('hidden')
+    // Add opponents the total array of opponents
+    addOpponent()
+    // Apply move opponent function with the new interval (end game is within the moveOpponents function)
+    moveOpponents()
+    // Apply the random football shots function in here
+    opponentShotInterval = setInterval(() => opponentShots(), 1200)
+    // If let opponents is zero in level two, unhide the won-level-two div class, temporarily stop the keyboards from activating, hide the grid.
+  }
 
   // // Level three function
   // function levelThree() {
@@ -779,10 +787,10 @@ function init() {
   document.addEventListener('keydown', movePlayer)
   // When keydown is pressed using space, shoot the ball (only when the grid is not hidden)
   document.addEventListener('keydown', myShot)
-  // // When the "to the next level button" is pressed after level one, move to level two.
-  // toLevelTwo.addEventListener('click', levelTwo)
+  // When the "to the next level button" is pressed after level one, move to level two.
+  toLevelTwoButton.addEventListener('click', levelTwo)
   // // When the "to the next level button" is pressed, move to level three.
-  // toLevelThree.addEventListener('click', levelThree)
+  // toLevelThreeButton.addEventListener('click', levelThree)
   // Restart Game
   restartButton.addEventListener('click', restartGame)
   
