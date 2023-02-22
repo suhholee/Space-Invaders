@@ -62,7 +62,7 @@ function init() {
 
   // ! Variables
 
-  // ? Grid variables
+  // * Grid variables
 
   // Width
   const width = 10
@@ -85,17 +85,12 @@ function init() {
   // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid and to check if all of the opponents were removed (then proceed to the next level)
   let totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
 
+
   // * Keyboard(keyCode) variables
+
   const right = 39
   const left = 37
   const space = 32
-  // How to disable keyboard when not in grid
-  // document.onkeydown = function (e) {
-  //   return false
-  // }
-  // grid.onkeydown = function (e) {
-  //   return true
-  // }
 
 
   // * Other variables
@@ -145,6 +140,7 @@ function init() {
   } else {
     highScoreDisplay.innerHTML = 0
   }
+  console.log(highScore)
 
 
 
@@ -201,9 +197,11 @@ function init() {
   function movePlayer(e) {
     removePlayer()
     // Console logging arrows with their keyCodes
-    if (e.keyCode === right && currentPosition % width !== width - 1) {
+    if (e.keyCode === right && currentPosition % width !== width - 1 && !grid.classList.contains('hidden')) {
+      e.preventDefault()
       currentPosition++
-    } else if (e.keyCode === left  && currentPosition % width !== 0) {
+    } else if (e.keyCode === left  && currentPosition % width !== 0 && !grid.classList.contains('hidden')) {
+      e.preventDefault()
       currentPosition--
     }
     addPlayer(currentPosition)
@@ -346,7 +344,7 @@ function init() {
 
   // My player shoots the ball function
   function myShot(e) {
-    if (e.keyCode === space) {
+    if (e.keyCode === space && !grid.classList.contains('hidden')) {
       e.preventDefault()
       // Sound effects
       kick.play()
@@ -438,7 +436,7 @@ function init() {
       endGameLost()
     }
   }
-
+  
   // Opponent shoots the ball function
   function opponentShots() {
     // Set a random variable that starts from a position + width of any one of the opponents
@@ -448,7 +446,7 @@ function init() {
     // If lives is 0, then clear the interval and end the game as lost
     // If not continue to move on until the ball reaches the bottom row of the grid
     const opponentShotMovement = setInterval(() => {
-      // Remove the football when reached the bottom row
+      // Remove the football when reached the bottom row or when the grid is hid
       if (randomShotIndex >= cellCount) {
         removeOpponentFootball(randomShotIndex)
       } else if (cells[randomShotIndex].classList.contains('rashfordPlayer') || cells[randomShotIndex].classList.contains('haalandPlayer') || cells[randomShotIndex].classList.contains('kanePlayer') || cells[randomShotIndex].classList.contains('salahPlayer')) {
@@ -473,21 +471,32 @@ function init() {
       if (score >= parseInt(highScore)) {
         localStorage.setItem('highscore', highScore)
         highScoreDisplay.innerHTML = score
-      } else if (parseInt(highScore) === 0 && score < 0) {
-        localStorage.setItem('highscore', score)
       }
+      // else if (parseInt(highScore) === 0 && score < 0) {
+      //   localStorage.setItem('highscore', score)
+      // }
     } else {
       localStorage.setItem('highscore', score)
     }
+    console.log(highScore)
   }
 
   // * Remove all the elements in the grid function
 
+  // Remove all the footballs function (different with football position)
+  function removeAllFootball() {
+    cells.forEach(cell => {
+      if (cell.classList.contains('football')) {
+        removeFootball(cell.getIndex())
+      } else if (cell.classList.contains('oppponent-football')) {
+        removeOpponentFootball(cell.getIndex)
+      }
+    })
+  }
+  // Remove everything funciton (but without the opponents because opponents will all be removed except when the game is lost)
   function removeEverything() {
     removePlayer()
-    removeOpponent()
-    removeFootball()
-    removeOpponentFootball()
+    removeAllFootball()
   }
 
 
@@ -533,7 +542,6 @@ function init() {
   // Status checker that occurs every time the opponents are all removed
   function statusCheck() {
     // Remove all the elements in the array and clear the interval
-    removeEverything()
     clearInterval(opponentMovements)
     opponentMovements = null
     clearInterval(opponentShotInterval)
@@ -552,6 +560,9 @@ function init() {
       saintsChant.currentTime = 0
       backgroundMusic.play()
       backgroundMusic.loop = true
+      removeEverything()
+      // Save the final score if it is the highest score
+      highScoreChecker()
     } else if (level === 2) {
       grid.classList.add('hidden')
       wonLevelTwo.classList.remove('hidden')
@@ -559,6 +570,9 @@ function init() {
       toonsChant.currentTime = 0
       backgroundMusic.play()
       backgroundMusic.loop = true
+      removeEverything()
+      // Save the final score if it is the highest score
+      highScoreChecker()
     } else if (level === 3) {
       grid.classList.add('hidden')
       // Different champions gif with different selected players
@@ -568,24 +582,28 @@ function init() {
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        removeEverything()
       } else if (selectedHaaland === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('mancity-champions')
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        removeEverything()
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('tottenham-champions')
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        removeEverything()
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('liverpool-champions')
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        removeEverything()
       }
       // Save the final score if it is the highest score
       highScoreChecker()
@@ -701,6 +719,7 @@ function init() {
       bluesChant.pause()
     }
     // Remove all the elements in the grid
+    removePlayer()
     removeEverything()
     // Clear intervals
     clearInterval(opponentMovements)
