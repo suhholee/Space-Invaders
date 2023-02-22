@@ -301,6 +301,26 @@ function init() {
     }
   }
 
+  function shotRemover(opponentName, index) {
+    // Remove the football and the opponent image
+    removeFootball(index)
+    cells[index].classList.remove(opponentName)
+    // Add the red card until the interval ends
+    cells[index].classList.add('red-card')
+    siu.play()
+    const redCard = setTimeout(() => {
+      cells[index].classList.remove('red-card')
+    }, 300)
+    // Remove the index of the opponent that was hit in the arrays
+    const opponentIndex = opponentsGK.indexOf(index)
+    opponentsGK.splice(opponentIndex, 1)
+    const totalOpponentIndex = totalOpponentArray.indexOf(index)
+    totalOpponentArray.splice(totalOpponentIndex, 1)
+    // Increment the score
+    score += 10
+    scoreDisplay.innerHTML = score
+  }
+
   // My player shoots the ball function
   function myShot(e) {
     if (e.keyCode === space) {
@@ -310,6 +330,7 @@ function init() {
       // Ball position at start (right above cell of the player image)
       let shotIndex = currentPosition - width 
       addFootball(shotIndex)
+      // Shot remover function that will be used for each character
       // Rather than declaring a global variable, the interval variable is declared here.
       const shotMovement = setInterval(() => {
         // When the opponent grid cell is equal to the cell of the football I shot, remove the specific opponent player, the football, the shotIndex value within the four opponents array and add 10 points to the score
@@ -317,189 +338,40 @@ function init() {
         if (shotIndex < width) {
           removeFootball(shotIndex)
         } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
-          // Remove the football and the opponent image
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('banzunuOpponent')
-          // Add the red card until the interval ends
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          // Remove the index of the opponent that was hit in the arrays
-          const opponentIndex = opponentsGK.indexOf(shotIndex)
-          opponentsGK.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          // Increment the score
-          score += 10
-          scoreDisplay.innerHTML = score
-          // Clear the interval
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('popeOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('popeOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsGK.indexOf(shotIndex)
-          opponentsGK.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('kepaOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsGK.indexOf(shotIndex)
-          opponentsGK.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
+          shotRemover('banzunuOpponent', shotIndex)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('bednarekOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsDef.indexOf(shotIndex)
-          opponentsDef.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('trippierOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsDef.indexOf(shotIndex)
-          opponentsDef.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('jamesOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsDef.indexOf(shotIndex)
-          opponentsDef.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
+          shotRemover('bednarekOpponent', shotIndex)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('jwpOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsMid.indexOf(shotIndex)
-          opponentsMid.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('brunoOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsMid.indexOf(shotIndex)
-          opponentsMid.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('mountOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('mountOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsMid.indexOf(shotIndex)
-          opponentsMid.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
+          shotRemover('jwpOpponent', shotIndex)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('cheOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('cheOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsAtt.indexOf(shotIndex)
-          opponentsAtt.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
+          shotRemover('cheOpponent', shotIndex)
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('popeOpponent')) {
+          shotRemover('popeOpponent', shotIndex)
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
+          shotRemover('trippierOpponent', shotIndex)
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
+          shotRemover('brunoOpponent', shotIndex)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('wilsonOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsAtt.indexOf(shotIndex)
-          opponentsAtt.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
+          shotRemover('wilsonOpponent', shotIndex)
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
+          shotRemover('kepaOpponent', shotIndex)
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
+          shotRemover('jamesOpponent', shotIndex)
+          clearInterval(shotMovement)
+        } else if (cells[shotIndex].classList.contains('mountOpponent')) {
+          shotRemover('mountOpponent', shotIndex)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
-          removeFootball(shotIndex)
-          cells[shotIndex].classList.remove('kaiOpponent')
-          cells[shotIndex].classList.add('red-card')
-          siu.play()
-          const redCard = setTimeout(() => {
-            cells[shotIndex].classList.remove('red-card')
-          }, 300)
-          const opponentIndex = opponentsAtt.indexOf(shotIndex)
-          opponentsAtt.splice(opponentIndex, 1)
-          const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
-          totalOpponentArray.splice(totalOpponentIndex, 1)
-          score += 10
-          scoreDisplay.innerHTML = score
+          shotRemover('kaiOpponent', shotIndex)
           clearInterval(shotMovement)
         } else if (restartButton.addEventListener('click', restartGame)) {
           clearInterval(shotMovement)
@@ -508,6 +380,192 @@ function init() {
           shotIndex -= width
           addFootball(shotIndex)  
         }
+        // else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
+        //   // Remove the football and the opponent image
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('banzunuOpponent')
+        //   // Add the red card until the interval ends
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   // Remove the index of the opponent that was hit in the arrays
+        //   const opponentIndex = opponentsGK.indexOf(shotIndex)
+        //   opponentsGK.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   // Increment the score
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   // Clear the interval
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('popeOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('popeOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsGK.indexOf(shotIndex)
+        //   opponentsGK.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('kepaOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsGK.indexOf(shotIndex)
+        //   opponentsGK.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('bednarekOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsDef.indexOf(shotIndex)
+        //   opponentsDef.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('trippierOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsDef.indexOf(shotIndex)
+        //   opponentsDef.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('jamesOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsDef.indexOf(shotIndex)
+        //   opponentsDef.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('jwpOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsMid.indexOf(shotIndex)
+        //   opponentsMid.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('brunoOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsMid.indexOf(shotIndex)
+        //   opponentsMid.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('mountOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('mountOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsMid.indexOf(shotIndex)
+        //   opponentsMid.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('cheOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('cheOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsAtt.indexOf(shotIndex)
+        //   opponentsAtt.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('wilsonOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsAtt.indexOf(shotIndex)
+        //   opponentsAtt.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
+        //   removeFootball(shotIndex)
+        //   cells[shotIndex].classList.remove('kaiOpponent')
+        //   cells[shotIndex].classList.add('red-card')
+        //   siu.play()
+        //   const redCard = setTimeout(() => {
+        //     cells[shotIndex].classList.remove('red-card')
+        //   }, 300)
+        //   const opponentIndex = opponentsAtt.indexOf(shotIndex)
+        //   opponentsAtt.splice(opponentIndex, 1)
+        //   const totalOpponentIndex = totalOpponentArray.indexOf(shotIndex)
+        //   totalOpponentArray.splice(totalOpponentIndex, 1)
+        //   score += 10
+        //   scoreDisplay.innerHTML = score
+        //   clearInterval(shotMovement)
+        // } 
       }, 300)
     }
     // When the football grid cell is equal to the football that the opponent shot, remove both footballs
@@ -869,6 +927,12 @@ function init() {
     haaland.classList.remove('clicked')
     kane.classList.remove('clicked')
     salah.classList.remove('clicked')
+    // Remove the player and reset the selectedPlayer boolean
+    removePlayer()
+    selectedRashford = false
+    selectedHaaland = false
+    selectedKane = false
+    selectedSalah = false
     // Clear opponents and their movement/shot interval
     removeOpponent()
     clearInterval(opponentMovements)
