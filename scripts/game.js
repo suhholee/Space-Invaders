@@ -140,6 +140,11 @@ function init() {
 
   // Retrieve the high score from local storage
   const highScore = localStorage.getItem('highscore')
+  if (highScore !== null) {
+    highScoreDisplay.innerHTML = highScore
+  } else {
+    highScoreDisplay.innerHTML = 0
+  }
 
 
 
@@ -446,7 +451,7 @@ function init() {
       // Remove the football when reached the bottom row
       if (randomShotIndex >= cellCount) {
         removeOpponentFootball(randomShotIndex)
-      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer') || cells[randomShotIndex].classList.contains('haalanddPlayer') || cells[randomShotIndex].classList.contains('kanePlayer') || cells[randomShotIndex].classList.contains('salahPlayer')) {
+      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer') || cells[randomShotIndex].classList.contains('haalandPlayer') || cells[randomShotIndex].classList.contains('kanePlayer') || cells[randomShotIndex].classList.contains('salahPlayer')) {
         playerRemover(randomShotIndex, opponentShotMovement)
       } else if (restartButton.addEventListener('click', restartGame)) {
         clearInterval(opponentShotMovement)
@@ -468,6 +473,8 @@ function init() {
       if (score >= parseInt(highScore)) {
         localStorage.setItem('highscore', highScore)
         highScoreDisplay.innerHTML = score
+      } else if (parseInt(highScore) === 0 && score < 0) {
+        localStorage.setItem('highscore', score)
       }
     } else {
       localStorage.setItem('highscore', score)
@@ -480,7 +487,7 @@ function init() {
     removePlayer()
     removeOpponent()
     removeFootball()
-    removeOpponentFootball
+    removeOpponentFootball()
   }
 
 
