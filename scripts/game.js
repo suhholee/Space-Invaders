@@ -487,9 +487,9 @@ function init() {
   function removeAllFootball() {
     cells.forEach(cell => {
       if (cell.classList.contains('football')) {
-        removeFootball(cell.getIndex())
+        removeFootball(cells.indexOf(cell))
       } else if (cell.classList.contains('oppponent-football')) {
-        removeOpponentFootball(cell.getIndex)
+        removeOpponentFootball(cells.indexOf(cell))
       }
     })
   }
@@ -602,7 +602,7 @@ function init() {
         champione.loop = true
         // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
-      } else if (selectedKane === true) {
+      } else if (selectedSalah === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('liverpool-champions')
         bluesChant.pause()
