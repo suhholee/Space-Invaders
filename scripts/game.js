@@ -52,7 +52,7 @@ function init() {
   const champione = document.querySelector('.champione')
   toonsChant.volume = 0.1
   bluesChant.volume = 0.1
-  champione.volume = 0.2
+  champione.volume = 0.1
   
   // ! Variables
   // * Grid variables
@@ -301,7 +301,8 @@ function init() {
     }
   }
 
-  function shotRemover(opponentName, index, opponentArray) {
+  // Opponent remover function that will be used within the myShot function when checking whether my football shot hit the opponent
+  function opponentRemover(opponentName, index, opponentArray) {
     // Remove the football and the opponent image
     removeFootball(index)
     cells[index].classList.remove(opponentName)
@@ -316,7 +317,6 @@ function init() {
     opponentArray.splice(opponentIndex, 1)
     const totalOpponentIndex = totalOpponentArray.indexOf(index)
     totalOpponentArray.splice(totalOpponentIndex, 1)
-    console.log('opponents', index, opponentsAtt)
     // Increment the score
     score += 10
     scoreDisplay.innerHTML = score
@@ -339,40 +339,40 @@ function init() {
         if (shotIndex < width) {
           removeFootball(shotIndex)
         } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
-          shotRemover('banzunuOpponent', shotIndex, opponentsGK)
+          opponentRemover('banzunuOpponent', shotIndex, opponentsGK)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
-          shotRemover('bednarekOpponent', shotIndex, opponentsDef)
+          opponentRemover('bednarekOpponent', shotIndex, opponentsDef)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
-          shotRemover('jwpOpponent', shotIndex, opponentsMid)
+          opponentRemover('jwpOpponent', shotIndex, opponentsMid)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('cheOpponent')) {
-          shotRemover('cheOpponent', shotIndex, opponentsAtt)
+          opponentRemover('cheOpponent', shotIndex, opponentsAtt)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('popeOpponent')) {
-          shotRemover('popeOpponent', shotIndex, opponentsGK)
+          opponentRemover('popeOpponent', shotIndex, opponentsGK)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
-          shotRemover('trippierOpponent', shotIndex, opponentsDef)
+          opponentRemover('trippierOpponent', shotIndex, opponentsDef)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
-          shotRemover('brunoOpponent', shotIndex, opponentsMid)
+          opponentRemover('brunoOpponent', shotIndex, opponentsMid)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
-          shotRemover('wilsonOpponent', shotIndex, opponentsAtt)
+          opponentRemover('wilsonOpponent', shotIndex, opponentsAtt)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
-          shotRemover('kepaOpponent', shotIndex, opponentsGK)
+          opponentRemover('kepaOpponent', shotIndex, opponentsGK)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
-          shotRemover('jamesOpponent', shotIndex, opponentsDef)
+          opponentRemover('jamesOpponent', shotIndex, opponentsDef)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('mountOpponent')) {
-          shotRemover('mountOpponent', shotIndex, opponentsMid)
+          opponentRemover('mountOpponent', shotIndex, opponentsMid)
           clearInterval(shotMovement)
         } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
-          shotRemover('kaiOpponent', shotIndex, opponentsAtt)
+          opponentRemover('kaiOpponent', shotIndex, opponentsAtt)
           clearInterval(shotMovement)
         } else if (restartButton.addEventListener('click', restartGame)) {
           clearInterval(shotMovement)
@@ -400,6 +400,21 @@ function init() {
     }
   }
 
+  // Player remover function that is used within the opponentShots function to remove the player when hit with the opponent's football
+  function playerRemover(index, interval) {
+    removeOpponentFootball(index)
+    whistle.play()
+    lives--
+    heartsDisplay.innerHTML = '❤️'.repeat(lives)
+    clearInterval(interval)
+    if (lives === 0) {
+      clearInterval(opponentShotInterval)
+      clearInterval(interval)
+      heartsDisplay.innerHTML = 'GAME OVER'
+      endGameLost()
+    }
+  }
+
   // Opponent shoots the ball function
   function opponentShots() {
     // Set a random variable that starts from a position + width of any one of the opponents
@@ -412,54 +427,8 @@ function init() {
       // Remove the football when reached the bottom row
       if (randomShotIndex >= cellCount) {
         removeOpponentFootball(randomShotIndex)
-      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        whistle.play()
-        lives--
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
-        if (lives === 0) {
-          clearInterval(opponentShotInterval)
-          clearInterval(opponentShotMovement)
-          heartsDisplay.innerHTML = 'GAME OVER'
-          endGameLost()
-        }
-      } else if (cells[randomShotIndex].classList.contains('haalandPlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        whistle.play()
-        lives--
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
-        if (lives === 0) {
-          clearInterval(opponentShotInterval)
-          clearInterval(opponentShotMovement)
-          heartsDisplay.innerHTML = 'GAME OVER'
-          endGameLost()
-        }
-      } else if (cells[randomShotIndex].classList.contains('kanePlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        whistle.play()
-        lives--
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
-        if (lives === 0) {
-          clearInterval(opponentShotInterval)
-          clearInterval(opponentShotMovement)
-          heartsDisplay.innerHTML = 'GAME OVER'
-          endGameLost()
-        }
-      } else if (cells[randomShotIndex].classList.contains('salahPlayer')) {
-        removeOpponentFootball(randomShotIndex)
-        whistle.play()
-        lives--
-        heartsDisplay.innerHTML = '❤️'.repeat(lives)
-        clearInterval(opponentShotMovement)
-        if (lives === 0) {
-          clearInterval(opponentShotInterval)
-          clearInterval(opponentShotMovement)
-          heartsDisplay.innerHTML = 'GAME OVER'
-          endGameLost()
-        }
+      } else if (cells[randomShotIndex].classList.contains('rashfordPlayer') || cells[randomShotIndex].classList.contains('haalanddPlayer') || cells[randomShotIndex].classList.contains('kanePlayer') || cells[randomShotIndex].classList.contains('salahPlayer')) {
+        playerRemover(randomShotIndex, opponentShotMovement)
       } else if (restartButton.addEventListener('click', restartGame)) {
         clearInterval(opponentShotMovement)
       } else {
@@ -510,6 +479,7 @@ function init() {
   function statusCheck() {
     // Reset the intervals and remove the player
     removePlayer()
+    removeFootball()
     clearInterval(opponentMovements)
     opponentMovements = null
     clearInterval(opponentShotInterval)
@@ -537,6 +507,7 @@ function init() {
       backgroundMusic.loop = true
     } else if (level === 3) {
       grid.classList.add('hidden')
+      // Different champions gif with different selected players
       if (selectedRashford === true) {
         wonGame.classList.remove('hidden')
         gameOverChampions.classList.add('manutd-champions')
