@@ -1,6 +1,7 @@
 function init() {
 
   // ! Elements
+
   // Enter game elements
   const startPage = document.querySelector('.start-page')
   const trophy = document.querySelector('.trophy')
@@ -20,9 +21,9 @@ function init() {
   const haaland = document.querySelector('.haaland')
   const kane = document.querySelector('.kane')
   const salah = document.querySelector('.salah')
+  const playerSelection = [rashford, haaland, kane, salah]
   
   // Entering the game
-  const gridWrapper = document.querySelector('.grid-wrapper')
   const enterLevelOne = document.querySelector('.enter-level-one')
   const grid = document.querySelector('.grid')
   
@@ -56,8 +57,13 @@ function init() {
   // Sound effects array to mute all of these effects when clicked the mute button
   const soundEffects = [backgroundMusic, click, kick, whistle, siu, saintsChant, toonsChant, bluesChant, champione]
   
+
+
+
   // ! Variables
-  // * Grid variables
+
+  // ? Grid variables
+
   // Width
   const width = 10
 
@@ -132,10 +138,15 @@ function init() {
   // Salah boolean
   let selectedSalah = false
 
+  // Retrieve the high score from local storage
+  const highScore = localStorage.getItem('highscore')
+
+
 
 
   // ! Executions
-  // Create the pitch grid
+
+  // * Create the pitch grid
   function createGrid() {
     // Using the total cell count we've saved to a variable we're going to use a for loop to iterate that many times
     for (let i = 0; i < cellCount; i++) {
@@ -150,7 +161,9 @@ function init() {
     }
   }
 
+
   // * Player functions
+
   // Add player function
   function addPlayer(position) {
     // The class of the player that is selected is added
@@ -193,6 +206,7 @@ function init() {
 
 
   // * Opponent functions
+
   // Add opponent function
   function addOpponent() {
     // Add three different types of opponent images in three different levels
@@ -289,6 +303,7 @@ function init() {
 
 
   // * Shooting the football functions
+
   // Add my football function
   function addFootball(position) {
     if (position >= 0) {
@@ -388,14 +403,14 @@ function init() {
     // When the football grid cell is equal to the football that the opponent shot, remove both footballs
   }
 
-  // Add my football function
+  // Add opponent football function
   function addOpponentFootball(position) {
     if (position < cellCount) {
       cells[position].classList.add('opponent-football')
     }
   }
 
-  // Remove my football function
+  // Remove opponent football function
   function removeOpponentFootball(position) {
     if (position < cellCount) {
       cells[position].classList.remove('opponent-football')
@@ -408,6 +423,8 @@ function init() {
     whistle.play()
     lives--
     heartsDisplay.innerHTML = '❤️'.repeat(lives)
+    score -= 50
+    scoreDisplay.innerHTML = score
     clearInterval(interval)
     if (lives === 0) {
       clearInterval(opponentShotInterval)
@@ -441,9 +458,37 @@ function init() {
     }, shotMovementTime)
   }
 
+
+  // * High score check function
+
+  // High score checker
+  function highScoreChecker() {
+    // Save the final score if it is the highest score
+    if (highScore !== null) {
+      if (score >= parseInt(highScore)) {
+        localStorage.setItem('highscore', highScore)
+        highScoreDisplay.innerHTML = score
+      }
+    } else {
+      localStorage.setItem('highscore', score)
+    }
+  }
+
+  // * Remove all the elements in the grid function
+
+  function removeEverything() {
+    removePlayer()
+    removeOpponent()
+    removeFootball()
+    removeOpponentFootball
+  }
+
+
+
   // * Game functions in order
+
   // Enter the game function
-  function enterGame(e) {
+  function enterGame() {
     // Hide and unhide div classes
     startPage.classList.add('hidden')
     gameContainer.classList.remove('hidden')
@@ -478,10 +523,10 @@ function init() {
     setTimeout(() => startGame(), 300)
   }
 
+  // Status checker that occurs every time the opponents are all removed
   function statusCheck() {
-    // Reset the intervals and remove the player
-    removePlayer()
-    removeFootball()
+    // Remove all the elements in the array and clear the interval
+    removeEverything()
     clearInterval(opponentMovements)
     opponentMovements = null
     clearInterval(opponentShotInterval)
@@ -535,6 +580,8 @@ function init() {
         champione.play()
         champione.loop = true
       }
+      // Save the final score if it is the highest score
+      highScoreChecker()
     }
   }
 
@@ -646,6 +693,8 @@ function init() {
     } else if (!grid.classList.contains('hidden') && level === 3) {
       bluesChant.pause()
     }
+    // Remove all the elements in the grid
+    removeEverything()
     // Clear intervals
     clearInterval(opponentMovements)
     grid.classList.add('hidden')
@@ -653,7 +702,33 @@ function init() {
     backgroundMusic.play()
     backgroundMusic.loop = true
     console.log('End Game')
+    // Save the final score if it is the highest score
+    highScoreChecker()
   }
+
+  // Reset display and music class that will be used in the restart game function
+  class restartDisplayAndMusic {
+    constructor(displayType, music) {
+      this.displayType = displayType
+      this.music = music
+    }
+
+    restart() {
+      this.displayType.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+      // Reset Song
+      this.music.pause()
+      this.music.currentTime = 0
+    }
+  }
+  // Class constants linking the display and BGM
+  const gridLevelOne = new restartDisplayAndMusic(grid, saintsChant)
+  const gridLevelTwo = new restartDisplayAndMusic(grid, toonsChant)
+  const gridLevelThree = new restartDisplayAndMusic(grid, bluesChant)
+  const lostGameBGM = new restartDisplayAndMusic(lostGame, backgroundMusic)
+  const wonLevelOneBGM = new restartDisplayAndMusic(wonLevelOne, backgroundMusic)
+  const wonLevelTwoBGM = new restartDisplayAndMusic(wonLevelTwo, backgroundMusic)
+  const wonGameBGM = new restartDisplayAndMusic(wonGame, champione)
 
   // Restart game function
   function restartGame() {
@@ -668,61 +743,32 @@ function init() {
       enterLevelOne.classList.add('hidden')
       selectPlayerDisplay.classList.remove('hidden')
     } else if (!grid.classList.contains('hidden') && level === 1) {
-      grid.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      // Reset song
-      saintsChant.pause()
-      saintsChant.currentTime = 0
+      gridLevelOne.restart()
     } else if (!grid.classList.contains('hidden') && level === 2) {
-      grid.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      // Reset song
-      toonsChant.pause()
-      toonsChant.currentTime = 0
+      gridLevelTwo.restart()
     } else if (!grid.classList.contains('hidden') && level === 3) {
-      grid.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      // Reset song
-      bluesChant.pause()
-      bluesChant.currentTime = 0
+      gridLevelThree.restart()
     } else if (!lostGame.classList.contains('hidden')) {
-      lostGame.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      // Reset song
-      backgroundMusic.pause()
-      backgroundMusic.currentTime = 0
+      lostGameBGM.restart()
     } else if (!wonLevelOne.classList.contains('hidden')) {
-      wonLevelOne.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      // Reset song
-      backgroundMusic.pause()
-      backgroundMusic.currentTime = 0
+      wonLevelOneBGM.restart()
     } else if (!wonLevelTwo.classList.contains('hidden')) {
-      wonLevelTwo.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      // Reset song
-      backgroundMusic.pause()
-      backgroundMusic.currentTime = 0
+      wonLevelTwoBGM.restart()
     } else if (!wonGame.classList.contains('hidden')) {
-      wonGame.classList.add('hidden')
-      selectPlayerDisplay.classList.remove('hidden')
-      champione.pause()
-      champione.currentTime = 0
-      backgroundMusic.play()
+      wonGameBGM.restart()
     }
-    // Remove clicked class from the select player containers
-    rashford.classList.remove('clicked')
-    haaland.classList.remove('clicked')
-    kane.classList.remove('clicked')
-    salah.classList.remove('clicked')
-    // Remove the player and reset the selectedPlayer boolean
-    removePlayer()
+    // Remove clicked class from the select player containers using the player selection array
+    for (let i = 0; i < playerSelection.length; i++) {
+      playerSelection[i].classList.remove('clicked')
+    }
+    // Remove all the elements in the grid
+    removeEverything()
+    // Reset the selectedPlayer boolean
     selectedRashford = false
     selectedHaaland = false
     selectedKane = false
     selectedSalah = false
     // Clear opponents and their movement/shot interval
-    removeOpponent()
     clearInterval(opponentMovements)
     opponentMovements = null
     clearInterval(opponentShotInterval)
@@ -753,9 +799,8 @@ function init() {
     click.play()
   }  
 
-  // Mute audio function
+  // * Mute audio function
   function muteAudio() {
-    console.log('yo')
     if (soundButton.classList.contains('unmute')) {
       soundButton.classList.remove('unmute')
       soundButton.classList.add('mute')
@@ -772,6 +817,8 @@ function init() {
       click.play()
     }
   }
+
+
 
 
   // ! Events
@@ -792,6 +839,9 @@ function init() {
   // Mute audio
   soundButton.addEventListener('click', muteAudio)
   
+
+
+
   // ! Page load
   createGrid()
 }
