@@ -560,6 +560,7 @@ function init() {
       saintsChant.currentTime = 0
       backgroundMusic.play()
       backgroundMusic.loop = true
+      // Remove everything is added here because the elements need to be removed when the grid is hidden
       removeEverything()
       // Save the final score if it is the highest score
       highScoreChecker()
@@ -570,6 +571,7 @@ function init() {
       toonsChant.currentTime = 0
       backgroundMusic.play()
       backgroundMusic.loop = true
+      // Remove everything is added here because the elements need to be removed when the grid is hidden
       removeEverything()
       // Save the final score if it is the highest score
       highScoreChecker()
@@ -582,6 +584,7 @@ function init() {
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
       } else if (selectedHaaland === true) {
         wonGame.classList.remove('hidden')
@@ -589,6 +592,7 @@ function init() {
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
@@ -596,6 +600,7 @@ function init() {
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
       } else if (selectedKane === true) {
         wonGame.classList.remove('hidden')
@@ -603,6 +608,7 @@ function init() {
         bluesChant.pause()
         champione.play()
         champione.loop = true
+        // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
       }
       // Save the final score if it is the highest score
@@ -719,7 +725,7 @@ function init() {
       bluesChant.pause()
     }
     // Remove all the elements in the grid
-    removePlayer()
+    removeOpponent()
     removeEverything()
     // Clear intervals
     clearInterval(opponentMovements)
@@ -789,6 +795,7 @@ function init() {
     }
     // Remove all the elements in the grid
     removeEverything()
+    removeOpponent()
     // Reset the selectedPlayer boolean
     selectedRashford = false
     selectedHaaland = false
