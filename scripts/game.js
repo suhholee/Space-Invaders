@@ -36,7 +36,7 @@ function init() {
   const gameOverChampions = document.querySelector('.champions')
   
   // Sound effects
-  const muteButton = document.querySelector('#mute')
+  const soundButton = document.querySelector('.soundButton')
   const backgroundMusic = document.querySelector('.pl-anthem')
   backgroundMusic.volume = 0.1
   const click = document.querySelector('.click')
@@ -53,6 +53,8 @@ function init() {
   toonsChant.volume = 0.1
   bluesChant.volume = 0.1
   champione.volume = 0.1
+  // Sound effects array to mute all of these effects when clicked the mute button
+  const soundEffects = [backgroundMusic, click, kick, whistle, siu, saintsChant, toonsChant, bluesChant, champione]
   
   // ! Variables
   // * Grid variables
@@ -753,10 +755,22 @@ function init() {
 
   // Mute audio function
   function muteAudio() {
-    backgroundMusic.muted = true
-    saintsChant.muted = true
-    toonsChant.muted = true
-    bluesChant.muted = true
+    console.log('yo')
+    if (soundButton.classList.contains('unmute')) {
+      soundButton.classList.remove('unmute')
+      soundButton.classList.add('mute')
+      click.play()
+      for (let i = 0; i < soundEffects.length; i++) {
+        soundEffects[i].muted = true
+      }
+    } else if (soundButton.classList.contains('mute')) {
+      soundButton.classList.remove('mute')
+      soundButton.classList.add('unmute')
+      for (let i = 0; i < soundEffects.length; i++) {
+        soundEffects[i].muted = false
+      }
+      click.play()
+    }
   }
 
 
@@ -776,7 +790,7 @@ function init() {
   // Restart Game
   restartButton.addEventListener('click', restartGame)
   // Mute audio
-  muteButton.addEventListener('click', muteAudio)
+  soundButton.addEventListener('click', muteAudio)
   
   // ! Page load
   createGrid()
