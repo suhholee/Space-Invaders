@@ -168,7 +168,6 @@ function init() {
       grid.appendChild(cell)
       // Push cell into cells array
       cells.push(cell)
-      cell.innerHTML = i
     }
   }
 
@@ -566,6 +565,8 @@ function init() {
       backgroundMusic.loop = true
       // Remove everything is added here because the elements need to be removed when the grid is hidden
       removeEverything()
+      // Reset starting position
+      currentPosition = startingPosition
       // Save the final score if it is the highest score
       highScoreChecker()
     } else if (level === 2) {
@@ -580,6 +581,8 @@ function init() {
       backgroundMusic.loop = true
       // Remove everything is added here because the elements need to be removed when the grid is hidden
       removeEverything()
+      // Reset starting position
+      currentPosition = startingPosition
       // Save the final score if it is the highest score
       highScoreChecker()
     } else if (level === 3) {
@@ -597,6 +600,8 @@ function init() {
         champione.loop = true
         // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
+        // Reset starting position
+        currentPosition = startingPosition
       } else if (selectedHaaland === true) {
         // Show won game
         wonGame.classList.remove('hidden')
@@ -609,6 +614,8 @@ function init() {
         champione.loop = true
         // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
+        // Reset starting position
+        currentPosition = startingPosition
       } else if (selectedKane === true) {
         // Show won game
         wonGame.classList.remove('hidden')
@@ -621,6 +628,8 @@ function init() {
         champione.loop = true
         // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
+        // Reset starting position
+        currentPosition = startingPosition
       } else if (selectedSalah === true) {
         // Show won game
         wonGame.classList.remove('hidden')
@@ -633,6 +642,8 @@ function init() {
         champione.loop = true
         // Remove everything is added here because the elements need to be removed when the grid is hidden
         removeEverything()
+        // Reset starting position
+        currentPosition = startingPosition
       }
       // Save the final score if it is the highest score
       highScoreChecker()
@@ -680,8 +691,8 @@ function init() {
     currentLevelDisplay.innerHTML = level
     // Interval is shortened
     interval -= decreaseInterval
-    // Reset starting position
-    currentPosition = startingPosition
+    // // Reset starting position
+    // currentPosition = startingPosition
     // Enter the grid
     wonLevelOne.classList.add('hidden')
     grid.classList.remove('hidden')
@@ -709,8 +720,8 @@ function init() {
     currentLevelDisplay.innerHTML = level
     // Interval is shortened
     interval -= decreaseInterval * 2
-    // Reset starting position
-    currentPosition = startingPosition
+    // // Reset starting position
+    // currentPosition = startingPosition
     // Enter grid
     wonLevelTwo.classList.add('hidden')
     grid.classList.remove('hidden')
@@ -736,8 +747,6 @@ function init() {
     } else if (!grid.classList.contains('hidden') && level === 3) {
       bluesChant.pause()
     }
-    // Remove all the elements in the grid
-    removeEverything()
     // Clear intervals
     clearInterval(opponentMovements)
     grid.classList.add('hidden')
@@ -745,6 +754,8 @@ function init() {
     backgroundMusic.play()
     backgroundMusic.loop = true
     console.log('End Game')
+    // Remove all the elements in the grid
+    removeEverything()
     // Save the final score if it is the highest score
     highScoreChecker()
   }
@@ -807,6 +818,11 @@ function init() {
     // If in the won-game class, remove the previous class of the character's team that won the game in gameOverChampions
     for (let i = 0; i < selectedPlayerBoolean.length; i++) {
       if (selectedPlayerBoolean[i] === true) {
+        championsArray.forEach(team => {
+          if (gameOverChampions.classList.contains(team)) {
+            gameOverChampions.classList.remove(team)
+          }
+        })
         gameOverChampions.classList.add(championsArray[i])
       }
     }
@@ -850,7 +866,7 @@ function init() {
 
 
   // * Mute audio function
-  
+
   function muteAudio() {
     if (soundButton.classList.contains('unmute')) {
       soundButton.classList.remove('unmute')
