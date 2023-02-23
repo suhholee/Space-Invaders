@@ -124,9 +124,6 @@ function init() {
   // Timer for the opponent's movement intervals
   let opponentMovements
 
-  // Status check interval variable
-  let statusCheckInterval
-
   // Rashford boolean
   let selectedRashford = false
 
@@ -171,6 +168,7 @@ function init() {
       grid.appendChild(cell)
       // Push cell into cells array
       cells.push(cell)
+      cell.innerHTML = i
     }
   }
 
@@ -352,6 +350,10 @@ function init() {
     // Increment the score
     score += 10
     scoreDisplay.innerHTML = score
+    // Status check interval every time an opponent is removed
+    if (totalOpponentArray.length === 0) {
+      statusCheck()
+    }
   }
 
   // My player shoots the ball function
@@ -448,9 +450,6 @@ function init() {
       heartsDisplay.innerHTML = 'GAME OVER'
       endGameLost()
     } 
-    // else if (lives < 0) {
-
-    // }
   }
   
   // Opponent shoots the ball function
@@ -478,34 +477,26 @@ function init() {
   }
 
 
-  // * High score check function
+  // * Other functions
 
   // High score checker
   function highScoreChecker() {
     // Save the final score if it is the highest score
     if (highScore !== null) {
+      console.log(highScore)
       if (score >= parseInt(highScore)) {
-        localStorage.setItem('highscore', highScore)
+        localStorage.setItem('highscore', score)
         highScoreDisplay.innerHTML = score
       }
-      // else if (parseInt(highScore) === 0 && score < 0) {
-      //   localStorage.setItem('highscore', score)
-      // }
     } else {
       localStorage.setItem('highscore', score)
     }
-    console.log(highScore)
   }
 
-  // * Remove all the player and football elements in the grid function
   // Remove everything funciton
   function removeEverything() {
     cells.forEach(cell => {
-      for (let i = 0; i < addedClassArray.length; i++) {
-        if (cell.classList.contains(addedClassArray[i])) {
-          cell.classList.remove(addedClassArray[i])
-        }
-      }
+      cell.className = ''
     })
   }
 
@@ -674,12 +665,6 @@ function init() {
       opponentShotInterval = setInterval(() => {
         opponentShots()
       }, 1500)
-      // Status check interval
-      statusCheckInterval = setInterval(() => {
-        if (totalOpponentArray.length === 0) {
-          statusCheck()
-        }
-      }, 1)
     }, 3000)
   }
 
@@ -710,12 +695,6 @@ function init() {
     opponentShotInterval = setInterval(() => {
       opponentShots()
     }, 1000)
-    // Status check interval
-    statusCheckInterval = setInterval(() => {
-      if (totalOpponentArray.length === 0) {
-        statusCheck()
-      }
-    }, 1)
   }
 
   // Level three function
@@ -745,12 +724,6 @@ function init() {
     opponentShotInterval = setInterval(() => {
       opponentShots()
     }, 600)
-    // Status check interval
-    statusCheckInterval = setInterval(() => {
-      if (totalOpponentArray.length === 0) {
-        statusCheck()
-      }
-    }, 1)
   }
 
   // End game function
@@ -767,8 +740,6 @@ function init() {
     removeEverything()
     // Clear intervals
     clearInterval(opponentMovements)
-    // Clear status checker
-    clearInterval(statusCheckInterval)
     grid.classList.add('hidden')
     lostGame.classList.remove('hidden')
     backgroundMusic.play()
@@ -851,8 +822,6 @@ function init() {
     opponentMovements = null
     clearInterval(opponentShotInterval)
     opponentShotInterval = null
-    // Clear status checker
-    clearInterval(statusCheckInterval)
     // Reset the arrays
     opponentsGK = [2, 3, 4]
     opponentsDef = [10, 11, 12, 13, 14, 15, 16]
@@ -879,7 +848,9 @@ function init() {
     click.play()
   }  
 
+
   // * Mute audio function
+  
   function muteAudio() {
     if (soundButton.classList.contains('unmute')) {
       soundButton.classList.remove('unmute')
