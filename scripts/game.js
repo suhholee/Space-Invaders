@@ -110,7 +110,7 @@ function init() {
   let interval = 1000
 
   // Decrease time (used when levels up)
-  const decreaseInterval = 200
+  const decreaseInterval = 150
 
   // Opponent shots interval
   let opponentShotInterval
@@ -362,6 +362,7 @@ function init() {
       const shotMovement = setInterval(() => {
         // When the opponent grid cell is equal to the cell of the football I shot, remove the specific opponent player, the football, the shotIndex value within the four opponents array and add 10 points to the score
         // Remove football when reached the top row
+        // Interval needs to be cleared when restart button was clicked or the grid is hidden
         if (shotIndex < width) {
           removeFootball(shotIndex)
         } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
@@ -400,7 +401,7 @@ function init() {
         } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
           opponentRemover('kaiOpponent', shotIndex, opponentsAtt)
           clearInterval(shotMovement)
-        } else if (restartButton.addEventListener('click', restartGame)) {
+        } else if (restartButton.addEventListener('click', restartGame) || grid.classList.contains('hidden')) {
           clearInterval(shotMovement)
         } else {
           removeFootball(shotIndex)
@@ -440,7 +441,10 @@ function init() {
       clearInterval(interval)
       heartsDisplay.innerHTML = 'GAME OVER'
       endGameLost()
-    }
+    } 
+    // else if (lives < 0) {
+
+    // }
   }
   
   // Opponent shoots the ball function
