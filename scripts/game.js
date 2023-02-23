@@ -121,6 +121,9 @@ function init() {
   // Timer for the opponent's movement intervals
   let opponentMovements
 
+  // Status check interval variable
+  let statusCheckInterval
+
   // Rashford boolean
   let selectedRashford = false
 
@@ -488,7 +491,7 @@ function init() {
     cells.forEach(cell => {
       if (cell.classList.contains('football')) {
         removeFootball(cells.indexOf(cell))
-      } else if (cell.classList.contains('oppponent-football')) {
+      } else if (cell.classList.contains('opponent-football')) {
         removeOpponentFootball(cells.indexOf(cell))
       }
     })
@@ -640,12 +643,14 @@ function init() {
       moveOpponents()
       // Apply the random football shots function in here
       opponentShotInterval = setInterval(() => {
+        opponentShots()
+      }, 1500)
+      // Status check interval
+      statusCheckInterval = setInterval(() => {
         if (totalOpponentArray.length === 0) {
           statusCheck()
         }
-        opponentShots()
-        // If let opponents is zero in level one, unhide the won-level-one div class, temporarily stop the keyboards from activating, and hide the grid.
-      }, 1500)
+      }, 50)
     }, 3000)
   }
 
@@ -674,12 +679,14 @@ function init() {
     moveOpponents()
     // Apply the random football shots function in here
     opponentShotInterval = setInterval(() => {
+      opponentShots()
+    }, 1200)
+    // Status check interval
+    statusCheckInterval = setInterval(() => {
       if (totalOpponentArray.length === 0) {
         statusCheck()
       }
-      opponentShots()
-    }, 1200)
-    // If let opponents is zero in level two, unhide the won-level-two div class, temporarily stop the keyboards from activating, hide the grid.
+    }, 50)
   }
 
   // Level three function
@@ -707,11 +714,14 @@ function init() {
     moveOpponents()
     // Apply the random football shots function in here
     opponentShotInterval = setInterval(() => {
+      opponentShots()
+    }, 900)
+    // Status check interval
+    statusCheckInterval = setInterval(() => {
       if (totalOpponentArray.length === 0) {
         statusCheck()
       }
-      opponentShots()
-    }, 900)
+    }, 50)
   }
 
   // End game function
@@ -729,6 +739,8 @@ function init() {
     removeEverything()
     // Clear intervals
     clearInterval(opponentMovements)
+    // Clear status checker
+    clearInterval(statusCheckInterval)
     grid.classList.add('hidden')
     lostGame.classList.remove('hidden')
     backgroundMusic.play()
@@ -806,6 +818,8 @@ function init() {
     opponentMovements = null
     clearInterval(opponentShotInterval)
     opponentShotInterval = null
+    // Clear status checker
+    clearInterval(statusCheckInterval)
     // Reset the arrays
     opponentsGK = [2, 3, 4]
     opponentsDef = [10, 11, 12, 13, 14, 15, 16]
