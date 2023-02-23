@@ -314,7 +314,7 @@ function init() {
   }
 
 
-  // * Shooting the football functions
+  // * Shooting my football functions
 
   // Add my football function
   function addFootball(position) {
@@ -420,6 +420,9 @@ function init() {
     // When the football grid cell is equal to the football that the opponent shot, remove both footballs
   }
 
+
+  // * Opponent shooting the ball functions
+
   // Add opponent football function
   function addOpponentFootball(position) {
     if (position < cellCount) {
@@ -437,7 +440,12 @@ function init() {
   // Player remover function that is used within the opponentShots function to remove the player when hit with the opponent's football
   function playerRemover(index, interval) {
     removeOpponentFootball(index)
+    // Show yellow card when hit with a football
+    cells[index].classList.add('yellow-card')
     whistle.play()
+    const yellowCard = setTimeout(() => {
+      cells[index].classList.remove('yellow-card')
+    }, 200)
     lives--
     heartsDisplay.innerHTML = '❤️'.repeat(lives)
     score -= 50

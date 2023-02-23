@@ -451,6 +451,12 @@ h3 {
 }
 
 /* ? Card */
+.yellow-card {
+  background-image: url('../assets/yellow-card.png');
+  background-repeat: no-repeat;
+  background-size: contain;
+}
+
 .red-card {
   background-image: url('../assets/red-card.png');
   background-repeat: no-repeat;
