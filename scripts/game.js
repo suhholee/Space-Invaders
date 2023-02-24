@@ -21,7 +21,7 @@ function init() {
   const haaland = document.querySelector('.haaland')
   const kane = document.querySelector('.kane')
   const salah = document.querySelector('.salah')
-  // Not used the const variable here because the user has to click the div, image, or the player name to work
+  // Arrays used in player selection display (Not used the const variable here because the user has to click the div, image, or the player name to work)
   const playerSelection = [rashford, haaland, kane, salah]
   const playerSelectionString = ['rashford', 'haaland', 'kane', 'salah']
   
@@ -200,10 +200,8 @@ function init() {
     removePlayer()
     // Console logging arrows with their keyCodes
     if (e.keyCode === right && currentPosition % width !== width - 1 && !grid.classList.contains('hidden')) {
-      e.preventDefault()
       currentPosition++
     } else if (e.keyCode === left  && currentPosition % width !== 0 && !grid.classList.contains('hidden')) {
-      e.preventDefault()
       currentPosition--
     }
     addPlayer(currentPosition)
@@ -545,6 +543,12 @@ function init() {
     opponentsMid = [20, 21, 22, 23, 24, 25, 26]
     opponentsAtt = [31, 32, 33, 34, 35]
     totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
+    // Remove everything is added here because the elements need to be removed when the grid is hidden
+    removeEverything()
+    // Reset starting position
+    currentPosition = startingPosition
+    // Save the final score if it is the highest score
+    highScoreChecker()
     // Proceed to the wonLevel/wonGame classes
     if (level === 1) {
       // Show won level one
@@ -556,12 +560,6 @@ function init() {
       // Play background music
       backgroundMusic.play()
       backgroundMusic.loop = true
-      // Remove everything is added here because the elements need to be removed when the grid is hidden
-      removeEverything()
-      // Reset starting position
-      currentPosition = startingPosition
-      // Save the final score if it is the highest score
-      highScoreChecker()
     } else if (level === 2) {
       // Show won level two
       grid.classList.add('hidden')
@@ -572,12 +570,6 @@ function init() {
       // Play background music
       backgroundMusic.play()
       backgroundMusic.loop = true
-      // Remove everything is added here because the elements need to be removed when the grid is hidden
-      removeEverything()
-      // Reset starting position
-      currentPosition = startingPosition
-      // Save the final score if it is the highest score
-      highScoreChecker()
     } else if (level === 3) {
       grid.classList.add('hidden')
       // Different champions gif with different selected players
@@ -592,14 +584,8 @@ function init() {
           // Play background music
           champione.play()
           champione.loop = true
-          // Remove everything is added here because the elements need to be removed when the grid is hidden
-          removeEverything()
-          // Reset starting position
-          currentPosition = startingPosition
         }
       }
-      // Save the final score if it is the highest score
-      highScoreChecker()
     }
   }
 
