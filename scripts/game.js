@@ -80,13 +80,12 @@ function init() {
   // Array of player classes the will be added or removed in the grid
   const playerClassArray = ['rashfordPlayer', 'haalandPlayer', 'kanePlayer', 'salahPlayer']
 
-  // Starting positions of the opponents
+  // Array of starting positions of the opponents
   // 4 different arrays that have different opponent images
   let opponentsGK = [2, 3, 4]
   let opponentsDef = [10, 11, 12, 13, 14, 15, 16]
   let opponentsMid = [20, 21, 22, 23, 24, 25, 26]
   let opponentsAtt = [31, 32, 33, 34, 35]
-
   // Total array of opponents that will be used later to prevent errors when the opponents move out of the grid and to check if all of the opponents were removed (then proceed to the next level)
   let totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
 
@@ -99,6 +98,7 @@ function init() {
 
 
   // * Other variables
+
   // Score
   let score = 0
 
@@ -109,7 +109,7 @@ function init() {
   let level = 1
 
   // Opponent movement interval time span
-  let interval = 1000
+  let intervalTime = 1000
 
   // Decrease time (used when levels up)
   const decreaseInterval = 150
@@ -187,7 +187,7 @@ function init() {
 
   // Remove player function
   function removePlayer() {
-    // The class of the player that is selected is added
+    // The class of the player that is selected is removed
     for (let i = 0; i < selectedPlayerBoolean.length; i++) {
       if (selectedPlayerBoolean[i] === true) {
         cells[currentPosition].classList.remove(playerClassArray[i])
@@ -195,13 +195,17 @@ function init() {
     }
   }
 
-  // Move player function using add and remove player functions (only within the grids labeled 90 - 99)
+  // Move player function using add and remove player functions
   function movePlayer(e) {
     removePlayer()
-    // Console logging arrows with their keyCodes
+    // Only move the player within the grids 90-99 and when there is the game grid in on display
     if (e.keyCode === right && currentPosition % width !== width - 1 && !grid.classList.contains('hidden')) {
+      // Prevent the default arrow keys to work
+      e.preventDefault()
       currentPosition++
     } else if (e.keyCode === left  && currentPosition % width !== 0 && !grid.classList.contains('hidden')) {
+      // Prevent the default arrow keys to work
+      e.preventDefault()
       currentPosition--
     }
     addPlayer(currentPosition)
@@ -212,7 +216,7 @@ function init() {
 
   // Add opponent function
   function addOpponent() {
-    // Add three different types of opponent images in three different levels
+    // Add four different types of opponent player images based on their position, in three different levels
     if (level === 1) {
       opponentsGK.forEach(opponents => cells[opponents].classList.add('banzunuOpponent'))
       opponentsDef.forEach(opponents => cells[opponents].classList.add('bednarekOpponent'))
@@ -233,7 +237,7 @@ function init() {
 
   // Remove opponent function
   function removeOpponent() {
-    // Remove four different types of opponent images in three different levels
+    // Remove four different types of opponent images based on their position, in three different levels
     if (level === 1) {
       opponentsGK.forEach(opponents => cells[opponents].classList.remove('banzunuOpponent'))
       opponentsDef.forEach(opponents => cells[opponents].classList.remove('bednarekOpponent'))
@@ -254,14 +258,14 @@ function init() {
 
   // Move opponent function
   function moveOpponents() {
-    // A function that uses add and remove functions to automatically move the opponents within the divs from the top to the bottom using interval times
+    // A function that uses add and remove player functions to automatically move the opponents within the cells using interval times
     // Variables that track the movement of the opponents
     let opponentMoved = 0
     let movesRight = true
     let movesLeft = false
     const movementLength = width - ((totalOpponentArray.length - (opponentsGK.length + opponentsAtt.length)) / 2)
     opponentMovements = setInterval(() => {
-      // Set conditionals to check whether the movement is left or right. After a certain duration of movement, 
+      // Set conditionals to check whether the movement is left or right. After the opponent group (each array of positions) moves movementLength(number), then move down. 
       removeOpponent()
       if (opponentMoved < movementLength && movesRight) {
         opponentsGK = opponentsGK.map(opponent => opponent + 1)
@@ -295,13 +299,13 @@ function init() {
         opponentMoved = 0
         movesRight = true
         movesLeft = false
-        // Added the game over function here because this conditional is the point that the opponents reaches the bottom of the grid
+        // When any of the opponents reaches the bottom of the grid, endGameLost.
         if (totalOpponentArray.some(opponent => opponent >= cellCount - width)) {
           endGameLost()
         }
       } 
       addOpponent()    
-    }, interval)
+    }, intervalTime)
   }
 
 
@@ -321,18 +325,18 @@ function init() {
     }
   }
 
-  // Opponent remover function that will be used within the myShot function when checking whether my football shot hit the opponent
+  // The opponent remover function will be used within the myShot function when checking whether my football shot hit the opponent
   function opponentRemover(opponentName, index, opponentArray) {
-    // Remove the football and the opponent image
+    // Remove my football and the opponent image
     removeFootball(index)
     cells[index].classList.remove(opponentName)
-    // Add the red card until the interval ends
+    // Add the red card and remove it when the timeout ends
     cells[index].classList.add('red-card')
     siu.play()
     const redCard = setTimeout(() => {
       cells[index].classList.remove('red-card')
     }, 300)
-    // Remove the index of the opponent that was hit in the arrays
+    // Remove the index of the opponent that was hit in the opponent arrays
     const opponentIndex = opponentArray.indexOf(index)
     opponentArray.splice(opponentIndex, 1)
     const totalOpponentIndex = totalOpponentArray.indexOf(index)
@@ -340,7 +344,7 @@ function init() {
     // Increment the score
     score += 10
     scoreDisplay.innerHTML = score
-    // Status check interval every time an opponent is removed
+    // Status check every time an opponent is removed to see if the player can move to the next round
     if (totalOpponentArray.length === 0) {
       statusCheck()
     }
@@ -349,14 +353,15 @@ function init() {
   // My player shoots the ball function
   function myShot(e) {
     if (e.keyCode === space && !grid.classList.contains('hidden')) {
+      // Prevent the default shift key to work
       e.preventDefault()
       // Sound effects
       kick.play()
       // Ball position at start (right above cell of the player image)
       let shotIndex = currentPosition - width 
       addFootball(shotIndex)
-      // Shot remover function that will be used for each character
-      // Rather than declaring a global variable, the interval variable is declared here.
+      // Shot remover function that will be used for each opponent character
+      // Rather than declaring a global variable, the interval variable is declared locally.
       const shotMovement = setInterval(() => {
         // When the opponent grid cell is equal to the cell of the football I shot, remove the specific opponent player, the football, the shotIndex value within the four opponents array and add 10 points to the score
         // Remove football when reached the top row
@@ -408,7 +413,6 @@ function init() {
         }
       }, 300)
     }
-    // When the football grid cell is equal to the football that the opponent shot, remove both footballs
   }
 
 
@@ -437,14 +441,17 @@ function init() {
     const yellowCard = setTimeout(() => {
       cells[index].classList.remove('yellow-card')
     }, 200)
+    // Remove a life
     lives--
     heartsDisplay.innerHTML = '❤️'.repeat(lives)
+    // Remove 50 points
     score -= 50
     scoreDisplay.innerHTML = score
+    // Clear the interval set within the opponent shots function (which would be the const opponentShotMovement), so that the player doesn't die repeatedly
     clearInterval(interval)
+    // If there are no lives left, clear the opponentShotInterval (the interval makes the opponents shoot every set interval time), show "game over" in heartsDisplay, and move to the endGameLost function
     if (lives === 0) {
       clearInterval(opponentShotInterval)
-      clearInterval(interval)
       heartsDisplay.innerHTML = 'GAME OVER'
       endGameLost()
     } 
@@ -454,10 +461,10 @@ function init() {
   function opponentShots() {
     // Set a random variable that starts from a position + width of any one of the opponents
     let randomShotIndex = totalOpponentArray[Math.floor(Math.random() * totalOpponentArray.length)] + width
-    // Have a random the opponent shoot footballs every interval
+    // Have a random the opponent shoot footballs
     // If cell of the opponentFootball contains a player, change the image using setTimeout and remove the football and -1 a heart
-    // If lives is 0, then clear the interval and end the game as lost
     // If not continue to move on until the ball reaches the bottom row of the grid
+    // This interval is the interval where the shot flies across the grid
     const opponentShotMovement = setInterval(() => {
       // Remove the football when reached the bottom row or when the grid is hid
       if (randomShotIndex >= cellCount) {
@@ -479,7 +486,7 @@ function init() {
 
   // High score checker
   function highScoreChecker() {
-    // Save the final score if it is the highest score (if the score is negative and )
+    // Save the final score if it is the highest score
     if (highScore !== null) {
       if (score >= parseInt(highScore)) {
         localStorage.setItem('highscore', score)
@@ -490,7 +497,7 @@ function init() {
     }
   }
 
-  // Remove everything funciton
+  // Remove every classes within every cell of the grid
   function removeEverything() {
     cells.forEach(cell => {
       cell.className = ''
@@ -503,7 +510,7 @@ function init() {
 
   // Enter the game function
   function enterGame() {
-    // Hide and unhide div classes
+    // Hide startPage and unhide gameContainer
     startPage.classList.add('hidden')
     gameContainer.classList.remove('hidden')
     // Click button audio
@@ -515,8 +522,7 @@ function init() {
 
   // Select player function
   function selectPlayer(e) {
-    // If a player is selected, change the image of the player by adding a style class in CSS
-    // Remove the other players div containers and enlarge the selected player by adding a class/transition
+    // If a player is selected, change the colour of the container by adding a style class in CSS
     // Change the player boolean that is selected to true
     for (let i = 0; i < playerSelection.length; i++) {
       if (e.target.classList.contains(playerSelectionString[i])) {
@@ -524,15 +530,26 @@ function init() {
         playerSelection[i].classList.add('clicked')
       }
     }
+    // Remove the class of the previous player character's team that won the game in gameOverChampions and add the current player character's team in gameOverChampions div
+    for (let i = 0; i < selectedPlayerBoolean.length; i++) {
+      if (selectedPlayerBoolean[i] === true) {
+        championsArray.forEach(team => {
+          if (gameOverChampions.classList.contains(team)) {
+            gameOverChampions.classList.remove(team)
+          }
+        })
+        gameOverChampions.classList.add(championsArray[i])
+      }
+    }
     // Click button audio
     click.play()
-    // Start the game a little bit after after the player is selected
+    // Start the game a little bit after(0.3s) the player is selected
     setTimeout(() => startGame(), 300)
   }
 
-  // Status checker that occurs every time the opponents are all removed
+  // Status checker that occurs every time the player's football hits the opponents to check if there are no opponents left
   function statusCheck() {
-    // Remove all the elements in the array and clear the interval
+    // Clear the interval and set the intervals back to null
     clearInterval(opponentMovements)
     opponentMovements = null
     clearInterval(opponentShotInterval)
@@ -543,13 +560,13 @@ function init() {
     opponentsMid = [20, 21, 22, 23, 24, 25, 26]
     opponentsAtt = [31, 32, 33, 34, 35]
     totalOpponentArray = opponentsGK.concat(opponentsDef.concat(opponentsMid.concat(opponentsAtt)))
-    // Remove everything is added here because the elements need to be removed when the grid is hidden
+    // Remove every classes is added within the cells
     removeEverything()
     // Reset starting position
     currentPosition = startingPosition
     // Save the final score if it is the highest score
     highScoreChecker()
-    // Proceed to the wonLevel/wonGame classes
+    // Conditionals to check to proceed to the wonLevel/wonGame classes
     if (level === 1) {
       // Show won level one
       grid.classList.add('hidden')
@@ -577,6 +594,7 @@ function init() {
         if (selectedPlayerBoolean[i] === true) {
           // Show won game
           wonGame.classList.remove('hidden')
+          // Show the champions gif within the same index as the selectedPlayerBoolean array (manutd-rashford, mancity-haaland, tottenham-kane, salah-liverpool)
           gameOverChampions.classList.add(championsArray[i])
           // Pause audio
           bluesChant.pause()
@@ -593,7 +611,7 @@ function init() {
   function startGame() {
     // Hide the select player class
     selectPlayerDisplay.classList.add('hidden')
-    // Unhide enter-level-one class and give an interval of 2 seconds and unhide grid class
+    // Unhide enter-level-one class and give an timeout of 3 seconds and hide enter-level-one and unhide grid class
     enterLevelOne.classList.remove('hidden')
     enteringGame = setTimeout(() => {
       // Pause background music
@@ -614,7 +632,7 @@ function init() {
       // Apply the random football shots function in here
       opponentShotInterval = setInterval(() => {
         opponentShots()
-      }, 1500)
+      }, 1200)
     }, 3000)
   }
 
@@ -629,22 +647,20 @@ function init() {
     level = 2
     currentLevelDisplay.innerHTML = level
     // Interval is shortened
-    interval -= decreaseInterval
-    // // Reset starting position
-    // currentPosition = startingPosition
-    // Enter the grid
+    intervalTime -= decreaseInterval
+    // Enter the game grid
     wonLevelOne.classList.add('hidden')
     grid.classList.remove('hidden')
     // Add player
     addPlayer(currentPosition)
     // Add opponents the total array of opponents
     addOpponent()
-    // Apply move opponent function with the new interval (end game is within the moveOpponents function)
+    // Apply move opponent function with the new decreased interval
     moveOpponents()
-    // Apply the random football shots function in here
+    // Opponents shoot the football in a shorter interval now
     opponentShotInterval = setInterval(() => {
       opponentShots()
-    }, 1000)
+    }, 900)
   }
 
   // Level three function
@@ -657,10 +673,8 @@ function init() {
     // Set the current level display inner HTML as 3
     level = 3
     currentLevelDisplay.innerHTML = level
-    // Interval is shortened
-    interval -= decreaseInterval * 2
-    // // Reset starting position
-    // currentPosition = startingPosition
+    // Interval is shortened more
+    intervalTime -= decreaseInterval * 2
     // Enter grid
     wonLevelTwo.classList.add('hidden')
     grid.classList.remove('hidden')
@@ -668,9 +682,9 @@ function init() {
     addPlayer(currentPosition)
     // Add opponents the total array of opponents
     addOpponent()
-    // Apply move opponent function with the new interval (end game is within the moveOpponents function)
+    // Apply move opponent function with the new interval
     moveOpponents()
-    // Apply the random football shots function in here
+    // Opponents shoot the football in a shorter interval now
     opponentShotInterval = setInterval(() => {
       opponentShots()
     }, 600)
@@ -686,8 +700,9 @@ function init() {
     } else if (!grid.classList.contains('hidden') && level === 3) {
       bluesChant.pause()
     }
-    // Clear intervals
+    // Clear the opponent movement interval
     clearInterval(opponentMovements)
+    // Show the lostGame display
     grid.classList.add('hidden')
     lostGame.classList.remove('hidden')
     backgroundMusic.play()
@@ -698,7 +713,7 @@ function init() {
     highScoreChecker()
   }
 
-  // Reset display and music class that will be used in the restart game function
+  // A class that resets display and background music (used in the restart game function)
   class restartDisplayAndMusic {
     constructor(displayType, music) {
       this.displayType = displayType
@@ -749,22 +764,11 @@ function init() {
     } else if (!wonGame.classList.contains('hidden')) {
       wonGameBGM.restart()
     }
-    // Remove clicked class from the select player containers using the player selection array
+    // Remove clicked class from the select player containers using a for loop around the player selection array
     for (let i = 0; i < playerSelection.length; i++) {
       playerSelection[i].classList.remove('clicked')
     }
-    // If in the won-game class, remove the previous class of the character's team that won the game in gameOverChampions
-    for (let i = 0; i < selectedPlayerBoolean.length; i++) {
-      if (selectedPlayerBoolean[i] === true) {
-        championsArray.forEach(team => {
-          if (gameOverChampions.classList.contains(team)) {
-            gameOverChampions.classList.remove(team)
-          }
-        })
-        gameOverChampions.classList.add(championsArray[i])
-      }
-    }
-    // Remove all the elements in the grid
+    // Remove all the classes in the grid
     removeEverything()
     // Reset individual selectedPlayer boolean
     selectedRashford = false
@@ -794,8 +798,8 @@ function init() {
     // Reset current level
     level = 1
     currentLevelDisplay.innerHTML = level
-    // Reset interval
-    interval = 1000
+    // Reset interval time
+    intervalTime = 1000
     // Reset starting position
     currentPosition = startingPosition
     // Play background music
@@ -807,6 +811,7 @@ function init() {
 
   // * Mute audio function
 
+  // Mute audio and unmute audio
   function muteAudio() {
     if (soundButton.classList.contains('unmute')) {
       soundButton.classList.remove('unmute')
@@ -849,7 +854,7 @@ function init() {
 
 
 
-  // ! Page load
+  // ! Page load create grid
   createGrid()
 }
 
