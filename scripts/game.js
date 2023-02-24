@@ -25,7 +25,7 @@ function init() {
   const playerSelection = [rashford, haaland, kane, salah]
   const playerSelectionString = ['rashford', 'haaland', 'kane', 'salah']
   
-  // Entering the game
+  // Entering the grid
   const enterLevelOne = document.querySelector('.enter-level-one')
   const grid = document.querySelector('.grid')
   
@@ -263,7 +263,7 @@ function init() {
     let opponentMoved = 0
     let movesRight = true
     let movesLeft = false
-    const movementLength = width - ((totalOpponentArray.length - (opponentsGK.length + opponentsAtt.length)) / 2)
+    const movementLength = width - opponentsDef.length
     opponentMovements = setInterval(() => {
       // Set conditionals to check whether the movement is left or right. After the opponent group (each array of positions) moves movementLength(number), then move down. 
       removeOpponent()
