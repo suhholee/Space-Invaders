@@ -21,7 +21,9 @@ function init() {
   const haaland = document.querySelector('.haaland')
   const kane = document.querySelector('.kane')
   const salah = document.querySelector('.salah')
+  // Not used the const variable here because the user has to click the div, image, or the player name to work
   const playerSelection = [rashford, haaland, kane, salah]
+  const playerSelectionString = ['rashford', 'haaland', 'kane', 'salah']
   
   // Entering the game
   const enterLevelOne = document.querySelector('.enter-level-one')
@@ -75,8 +77,8 @@ function init() {
   let currentPosition = startingPosition
   const cells = []
 
-  // Array of classes the will be added or removed in the grid
-  const addedClassArray = ['rashfordPlayer', 'haalandPlayer', 'kanePlayer', 'salahPlayer', 'football', 'opponent-football', 'banzunuOpponent', 'bednarekOpponent', 'jwpOpponent', 'cheOpponent', 'popeOpponent', 'trippierOpponent', 'brunoOpponent', 'wilsonOpponent', 'kepaOpponent', 'jamesOpponent', 'mountOpponent', 'kaiOpponent', 'red-card']
+  // Array of player classes the will be added or removed in the grid
+  const playerClassArray = ['rashfordPlayer', 'haalandPlayer', 'kanePlayer', 'salahPlayer']
 
   // Starting positions of the opponents
   // 4 different arrays that have different opponent images
@@ -106,40 +108,40 @@ function init() {
   // Current level
   let level = 1
 
-  // Opponent movement interval
+  // Opponent movement interval time span
   let interval = 1000
 
   // Decrease time (used when levels up)
   const decreaseInterval = 150
+  
+  // Timer for the opponent's movement intervals
+  let opponentMovements
 
   // Opponent shots interval
   let opponentShotInterval
 
-  // Opponent shot movement time
+  // Opponent shot movement time span
   const shotMovementTime = 300
 
   // Timeout for entering the game
   let enteringGame
 
-  // Timer for the opponent's movement intervals
-  let opponentMovements
-
   // Rashford boolean
   let selectedRashford = false
-
+  
   // Haaland boolean
   let selectedHaaland = false
-
+  
   // Kane boolean
   let selectedKane = false
-
+  
   // Salah boolean
   let selectedSalah = false
-
+  
   // Player boolean array
-  const selectedPlayerBoolean = [selectedRashford, selectedHaaland, selectedKane, selectedSalah]
+  let selectedPlayerBoolean = [selectedRashford, selectedHaaland, selectedKane, selectedSalah]
 
-  // Champions array (which will be used in the restartGame function)
+  // Champions array (which will be used in the restartGame function to renew the gameOverChampions div)
   const championsArray = ['manutd-champions', 'mancity-champions', 'tottenham-champions', 'liverpool-champions']
 
   // Retrieve the high score from local storageq
@@ -149,7 +151,6 @@ function init() {
   } else {
     highScoreDisplay.innerHTML = 0
   }
-  console.log(highScore)
 
 
 
@@ -177,28 +178,20 @@ function init() {
   // Add player function
   function addPlayer(position) {
     // The class of the player that is selected is added
-    if (selectedRashford === true) {
-      cells[position].classList.add('rashfordPlayer')
-    } else if (selectedHaaland === true) {
-      cells[position].classList.add('haalandPlayer')
-    } else if (selectedKane === true) {
-      cells[position].classList.add('kanePlayer')
-    } else if (selectedSalah === true) {
-      cells[position].classList.add('salahPlayer')
+    for (let i = 0; i < selectedPlayerBoolean.length; i++) {
+      if (selectedPlayerBoolean[i] === true) {
+        cells[position].classList.add(playerClassArray[i])
+      }
     }
   }
 
   // Remove player function
   function removePlayer() {
     // The class of the player that is selected is added
-    if (selectedRashford === true) {
-      cells[currentPosition].classList.remove('rashfordPlayer')
-    } else if (selectedHaaland === true) {
-      cells[currentPosition].classList.remove('haalandPlayer')
-    } else if (selectedKane === true) {
-      cells[currentPosition].classList.remove('kanePlayer')
-    } else if (selectedSalah === true) {
-      cells[currentPosition].classList.remove('salahPlayer')
+    for (let i = 0; i < selectedPlayerBoolean.length; i++) {
+      if (selectedPlayerBoolean[i] === true) {
+        cells[currentPosition].classList.remove(playerClassArray[i])
+      }
     }
   }
 
@@ -488,9 +481,8 @@ function init() {
 
   // High score checker
   function highScoreChecker() {
-    // Save the final score if it is the highest score
+    // Save the final score if it is the highest score (if the score is negative and )
     if (highScore !== null) {
-      console.log(highScore)
       if (score >= parseInt(highScore)) {
         localStorage.setItem('highscore', score)
         highScoreDisplay.innerHTML = score
@@ -528,18 +520,11 @@ function init() {
     // If a player is selected, change the image of the player by adding a style class in CSS
     // Remove the other players div containers and enlarge the selected player by adding a class/transition
     // Change the player boolean that is selected to true
-    if (e.target.classList.contains('rashford')) {
-      selectedRashford = true
-      rashford.classList.add('clicked')
-    } else if (e.target.classList.contains('haaland')) {
-      selectedHaaland = true
-      haaland.classList.add('clicked')
-    } else if (e.target.classList.contains('kane')) {
-      selectedKane = true
-      kane.classList.add('clicked')
-    } else if (e.target.classList.contains('salah')) {
-      selectedSalah = true
-      salah.classList.add('clicked')
+    for (let i = 0; i < playerSelection.length; i++) {
+      if (e.target.classList.contains(playerSelectionString[i])) {
+        selectedPlayerBoolean[i] = true
+        playerSelection[i].classList.add('clicked')
+      }
     }
     // Click button audio
     click.play()
@@ -596,62 +581,22 @@ function init() {
     } else if (level === 3) {
       grid.classList.add('hidden')
       // Different champions gif with different selected players
-      if (selectedRashford === true) {
-        // Show won game
-        wonGame.classList.remove('hidden')
-        gameOverChampions.classList.add('manutd-champions')
-        // Pause audio
-        bluesChant.pause()
-        bluesChant.currentTime = 0
-        // Play background music
-        champione.play()
-        champione.loop = true
-        // Remove everything is added here because the elements need to be removed when the grid is hidden
-        removeEverything()
-        // Reset starting position
-        currentPosition = startingPosition
-      } else if (selectedHaaland === true) {
-        // Show won game
-        wonGame.classList.remove('hidden')
-        gameOverChampions.classList.add('mancity-champions')
-        // Pause audio
-        bluesChant.pause()
-        bluesChant.currentTime = 0
-        // Play background music
-        champione.play()
-        champione.loop = true
-        // Remove everything is added here because the elements need to be removed when the grid is hidden
-        removeEverything()
-        // Reset starting position
-        currentPosition = startingPosition
-      } else if (selectedKane === true) {
-        // Show won game
-        wonGame.classList.remove('hidden')
-        gameOverChampions.classList.add('tottenham-champions')
-        // Pause audio
-        bluesChant.pause()
-        bluesChant.currentTime = 0
-        // Play background music
-        champione.play()
-        champione.loop = true
-        // Remove everything is added here because the elements need to be removed when the grid is hidden
-        removeEverything()
-        // Reset starting position
-        currentPosition = startingPosition
-      } else if (selectedSalah === true) {
-        // Show won game
-        wonGame.classList.remove('hidden')
-        gameOverChampions.classList.add('liverpool-champions')
-        // Pause audio
-        bluesChant.pause()
-        bluesChant.currentTime = 0
-        // Play background music
-        champione.play()
-        champione.loop = true
-        // Remove everything is added here because the elements need to be removed when the grid is hidden
-        removeEverything()
-        // Reset starting position
-        currentPosition = startingPosition
+      for (let i = 0; i < selectedPlayerBoolean.length; i++) {
+        if (selectedPlayerBoolean[i] === true) {
+          // Show won game
+          wonGame.classList.remove('hidden')
+          gameOverChampions.classList.add(championsArray[i])
+          // Pause audio
+          bluesChant.pause()
+          bluesChant.currentTime = 0
+          // Play background music
+          champione.play()
+          champione.loop = true
+          // Remove everything is added here because the elements need to be removed when the grid is hidden
+          removeEverything()
+          // Reset starting position
+          currentPosition = startingPosition
+        }
       }
       // Save the final score if it is the highest score
       highScoreChecker()
@@ -761,7 +706,6 @@ function init() {
     lostGame.classList.remove('hidden')
     backgroundMusic.play()
     backgroundMusic.loop = true
-    console.log('End Game')
     // Remove all the elements in the grid
     removeEverything()
     // Save the final score if it is the highest score
@@ -836,11 +780,13 @@ function init() {
     }
     // Remove all the elements in the grid
     removeEverything()
-    // Reset the selectedPlayer boolean
+    // Reset individual selectedPlayer boolean
     selectedRashford = false
     selectedHaaland = false
     selectedKane = false
     selectedSalah = false
+    // Reset the selectedPlayer boolean array
+    selectedPlayerBoolean = [selectedRashford, selectedHaaland, selectedKane, selectedSalah]
     // Clear opponents and their movement/shot interval
     clearInterval(opponentMovements)
     opponentMovements = null
