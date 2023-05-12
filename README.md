@@ -642,40 +642,9 @@ Elements were separated into 6 different types: enter game, left container (with
         } else if (cells[shotIndex].classList.contains('banzunuOpponent')) {
           opponentRemover('banzunuOpponent', shotIndex, opponentsGK)
           clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('bednarekOpponent')) {
-          opponentRemover('bednarekOpponent', shotIndex, opponentsDef)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('jwpOpponent')) {
-          opponentRemover('jwpOpponent', shotIndex, opponentsMid)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('cheOpponent')) {
-          opponentRemover('cheOpponent', shotIndex, opponentsAtt)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('popeOpponent')) {
-          opponentRemover('popeOpponent', shotIndex, opponentsGK)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('trippierOpponent')) {
-          opponentRemover('trippierOpponent', shotIndex, opponentsDef)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('brunoOpponent')) {
-          opponentRemover('brunoOpponent', shotIndex, opponentsMid)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('wilsonOpponent')) {
-          opponentRemover('wilsonOpponent', shotIndex, opponentsAtt)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('kepaOpponent')) {
-          opponentRemover('kepaOpponent', shotIndex, opponentsGK)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('jamesOpponent')) {
-          opponentRemover('jamesOpponent', shotIndex, opponentsDef)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('mountOpponent')) {
-          opponentRemover('mountOpponent', shotIndex, opponentsMid)
-          clearInterval(shotMovement)
-        } else if (cells[shotIndex].classList.contains('kaiOpponent')) {
-          opponentRemover('kaiOpponent', shotIndex, opponentsAtt)
-          clearInterval(shotMovement)
-        } else if (restartButton.addEventListener('click', restartGame) || grid.classList.contains('hidden')) {
+        }
+        // Other oppenent conditionals here (removed in README due to lengthy code)
+        else if (restartButton.addEventListener('click', restartGame) || grid.classList.contains('hidden')) {
           clearInterval(shotMovement)
         } else {
           removeFootball(shotIndex)
