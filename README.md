@@ -780,6 +780,30 @@ Elements were separated into 6 different types: enter game, left container (with
 - I have created a restart button and a function that clears all of the intervals and sets every variable back to normal, no matter what the display is. I have created a class to target specific displays and music to reset the display and pause and reset the music playing in the background.
 
   ```js
+  // A class that resets display and background music (used in the restart game function)
+  class restartDisplayAndMusic {
+    constructor(displayType, music) {
+      this.displayType = displayType
+      this.music = music
+    }
+    restart() {
+      this.displayType.classList.add('hidden')
+      selectPlayerDisplay.classList.remove('hidden')
+      // Reset Song
+      this.music.pause()
+      this.music.currentTime = 0
+    }
+  }
+
+  // Class constants linking the display and BGM
+  const gridLevelOne = new restartDisplayAndMusic(grid, saintsChant)
+  const gridLevelTwo = new restartDisplayAndMusic(grid, toonsChant)
+  const gridLevelThree = new restartDisplayAndMusic(grid, bluesChant)
+  const lostGameBGM = new restartDisplayAndMusic(lostGame, backgroundMusic)
+  const wonLevelOneBGM = new restartDisplayAndMusic(wonLevelOne, backgroundMusic)
+  const wonLevelTwoBGM = new restartDisplayAndMusic(wonLevelTwo, backgroundMusic)
+  const wonGameBGM = new restartDisplayAndMusic(wonGame, champione)
+
   function restartGame() {
     // Return to select player for each display
     if (!selectPlayerDisplay.classList.contains('hidden')) {
